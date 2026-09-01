@@ -743,7 +743,7 @@
 			<return type="RID" />
 			<description>
 				Creates a custom shape in the physics server, and returns the [RID] that identifies it. Use [method shape_set_data] to set the shape's data.
-				[b]Note:[/b] Custom shapes are not supported by the built-in physics servers, so calling this method always produces an error when using Godot Physics or Jolt Physics. Custom physics servers implemented as GDExtensions may support a custom shape.
+				[b]Note:[/b] Custom shapes are not supported by the built-in physics servers, so calling this method always produces an error when using Game Master Physics or Jolt Physics. Custom physics servers implemented as GDExtensions may support a custom shape.
 			</description>
 		</method>
 		<method name="cylinder_shape_create">
@@ -1034,7 +1034,7 @@
 			<param index="0" name="shape" type="RID" />
 			<description>
 				Returns the collision margin for the shape.
-				[b]Note:[/b] This is not used in Godot Physics, so will always return [code]0[/code].
+				[b]Note:[/b] This is not used in Game Master Physics, so will always return [code]0[/code].
 			</description>
 		</method>
 		<method name="shape_get_type" qualifiers="const">
@@ -1058,7 +1058,7 @@
 				- [constant SHAPE_CYLINDER]: a dictionary containing the keys [code]"height"[/code] and [code]"radius"[/code] with [float] values,
 				- [constant SHAPE_CONVEX_POLYGON]: a [PackedVector3Array] of points defining a convex polygon (the shape will be the convex hull of the points),
 				- [constant SHAPE_CONCAVE_POLYGON]: a dictionary containing the key [code]"faces"[/code] with a [PackedVector3Array] value (with a length divisible by 3, so that each 3-tuple of points forms a face) and the key [code]"backface_collision"[/code] with a [bool] value,
-				- [constant SHAPE_HEIGHTMAP]: a dictionary containing the keys [code]"width"[/code] and [code]"depth"[/code] with [int] values, and the key [code]"heights"[/code] with a value that is a packed array of [float]s of length [code]width * depth[/code] (that is a [PackedFloat32Array], or a [PackedFloat64Array] if Godot was compiled with the [code]precision=double[/code] option), and optionally the keys [code]"min_height"[/code] and [code]"max_height"[/code] with [float] values,
+				- [constant SHAPE_HEIGHTMAP]: a dictionary containing the keys [code]"width"[/code] and [code]"depth"[/code] with [int] values, and the key [code]"heights"[/code] with a value that is a packed array of [float]s of length [code]width * depth[/code] (that is a [PackedFloat32Array], or a [PackedFloat64Array] if Game Master was compiled with the [code]precision=double[/code] option), and optionally the keys [code]"min_height"[/code] and [code]"max_height"[/code] with [float] values,
 				- [constant SHAPE_SOFT_BODY]: the input [param data] is ignored and this method has no effect,
 				- [constant SHAPE_CUSTOM]: the input [param data] is interpreted by a custom physics server, if it supports custom shapes.
 			</description>
@@ -1069,7 +1069,7 @@
 			<param index="1" name="margin" type="float" />
 			<description>
 				Sets the collision margin for the shape.
-				[b]Note:[/b] This is not used in Godot Physics.
+				[b]Note:[/b] This is not used in Game Master Physics.
 			</description>
 		</method>
 		<method name="slider_joint_get_param" qualifiers="const">
@@ -1223,7 +1223,7 @@
 			<param index="1" name="state" type="int" enum="PhysicsServer3D.BodyState" />
 			<description>
 				Returns the given soft body state.
-				[b]Note:[/b] Godot's default physics implementation does not support [constant BODY_STATE_LINEAR_VELOCITY], [constant BODY_STATE_ANGULAR_VELOCITY], [constant BODY_STATE_SLEEPING], or [constant BODY_STATE_CAN_SLEEP].
+				[b]Note:[/b] Game Master's default physics implementation does not support [constant BODY_STATE_LINEAR_VELOCITY], [constant BODY_STATE_ANGULAR_VELOCITY], [constant BODY_STATE_SLEEPING], or [constant BODY_STATE_CAN_SLEEP].
 			</description>
 		</method>
 		<method name="soft_body_get_total_mass" qualifiers="const">
@@ -1305,7 +1305,7 @@
 			<param index="1" name="drag_coefficient" type="float" />
 			<description>
 				Sets the drag coefficient of the given soft body. Higher values increase this body's air resistance.
-				[b]Note:[/b] This value is currently unused by Godot's default physics implementation.
+				[b]Note:[/b] This value is currently unused by Game Master's default physics implementation.
 			</description>
 		</method>
 		<method name="soft_body_set_linear_stiffness">
@@ -1371,7 +1371,7 @@
 			<param index="2" name="variant" type="Variant" />
 			<description>
 				Sets the given body state for the given body.
-				[b]Note:[/b] Godot's default physics implementation does not support [constant BODY_STATE_LINEAR_VELOCITY], [constant BODY_STATE_ANGULAR_VELOCITY], [constant BODY_STATE_SLEEPING], or [constant BODY_STATE_CAN_SLEEP].
+				[b]Note:[/b] Game Master's default physics implementation does not support [constant BODY_STATE_LINEAR_VELOCITY], [constant BODY_STATE_ANGULAR_VELOCITY], [constant BODY_STATE_SLEEPING], or [constant BODY_STATE_CAN_SLEEP].
 			</description>
 		</method>
 		<method name="soft_body_set_total_mass">
@@ -1763,7 +1763,7 @@
 			Constant used internally for a soft body shape. Any attempt to create this kind of shape results in an error.
 		</constant>
 		<constant name="SHAPE_CUSTOM" value="10" enum="ShapeType">
-			Constant used internally for a custom shape. Any attempt to create this kind of shape results in an error when using Godot Physics or Jolt Physics.
+			Constant used internally for a custom shape. Any attempt to create this kind of shape results in an error when using Game Master Physics or Jolt Physics.
 		</constant>
 		<constant name="AREA_PARAM_GRAVITY_OVERRIDE_MODE" value="0" enum="AreaParameter">
 			Constant to set/get gravity override mode in an area. See [enum AreaSpaceOverrideMode] for possible values.

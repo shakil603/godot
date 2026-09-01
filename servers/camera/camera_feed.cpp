@@ -200,7 +200,7 @@ void CameraFeed::set_rgb_image(const Ref<Image> &p_rgb_img) {
 			RenderingServer::get_singleton()->texture_replace(texture[CameraServer::FEED_RGBA_IMAGE], new_texture);
 
 			// `format_changed` signal is deferred to ensure:
-			// - They are emitted on Godot's main thread.
+			// - They are emitted on Game Master's main thread.
 			// - Both datatype and frame size are updated before the emission.
 			call_deferred("emit_signal", format_changed_signal_name);
 		} else {
@@ -208,8 +208,8 @@ void CameraFeed::set_rgb_image(const Ref<Image> &p_rgb_img) {
 		}
 
 		datatype = CameraFeed::FEED_RGB;
-		// Most of the time the pixel data of camera devices comes from threads outside Godot.
-		// Defer `frame_changed` signals to ensure they are emitted on Godot's main thread.
+		// Most of the time the pixel data of camera devices comes from threads outside Game Master.
+		// Defer `frame_changed` signals to ensure they are emitted on Game Master's main thread.
 		call_deferred("emit_signal", frame_changed_signal_name);
 	}
 }
@@ -228,7 +228,7 @@ void CameraFeed::set_ycbcr_image(const Ref<Image> &p_ycbcr_img) {
 			RenderingServer::get_singleton()->texture_replace(texture[CameraServer::FEED_YCBCR_IMAGE], new_texture);
 
 			// `format_changed` signal is deferred to ensure:
-			// - They are emitted on Godot's main thread.
+			// - They are emitted on Game Master's main thread.
 			// - Both datatype and frame size are updated before the emission.
 			call_deferred("emit_signal", format_changed_signal_name);
 		} else {
@@ -236,8 +236,8 @@ void CameraFeed::set_ycbcr_image(const Ref<Image> &p_ycbcr_img) {
 		}
 
 		datatype = CameraFeed::FEED_YCBCR;
-		// Most of the time the pixel data of camera devices comes from threads outside Godot.
-		// Defer `frame_changed` signals to ensure they are emitted on Godot's main thread.
+		// Most of the time the pixel data of camera devices comes from threads outside Game Master.
+		// Defer `frame_changed` signals to ensure they are emitted on Game Master's main thread.
 		call_deferred("emit_signal", frame_changed_signal_name);
 	}
 }
@@ -266,7 +266,7 @@ void CameraFeed::set_ycbcr_images(const Ref<Image> &p_y_img, const Ref<Image> &p
 			}
 
 			// `format_changed` signal is deferred to ensure:
-			// - They are emitted on Godot's main thread.
+			// - They are emitted on Game Master's main thread.
 			// - Both datatype and frame size are updated before the emission.
 			call_deferred("emit_signal", format_changed_signal_name);
 		} else {
@@ -275,8 +275,8 @@ void CameraFeed::set_ycbcr_images(const Ref<Image> &p_y_img, const Ref<Image> &p
 		}
 
 		datatype = CameraFeed::FEED_YCBCR_SEP;
-		// Most of the time the pixel data of camera devices comes from threads outside Godot.
-		// Defer `frame_changed` signals to ensure they are emitted on Godot's main thread.
+		// Most of the time the pixel data of camera devices comes from threads outside Game Master.
+		// Defer `frame_changed` signals to ensure they are emitted on Game Master's main thread.
 		call_deferred("emit_signal", frame_changed_signal_name);
 	}
 }
@@ -290,14 +290,14 @@ void CameraFeed::set_external(int p_width, int p_height) {
 		RenderingServer::get_singleton()->texture_replace(texture[CameraServer::FEED_YCBCR_IMAGE], new_texture);
 
 		// `format_changed` signal is deferred to ensure:
-		// - They are emitted on Godot's main thread.
+		// - They are emitted on Game Master's main thread.
 		// - Both datatype and frame size are updated before the emission.
 		call_deferred("emit_signal", format_changed_signal_name);
 	}
 
 	datatype = CameraFeed::FEED_EXTERNAL;
-	// Most of the time the pixel data of camera devices comes from threads outside Godot.
-	// Defer `frame_changed` signals to ensure they are emitted on Godot's main thread.
+	// Most of the time the pixel data of camera devices comes from threads outside Game Master.
+	// Defer `frame_changed` signals to ensure they are emitted on Game Master's main thread.
 	call_deferred("emit_signal", frame_changed_signal_name);
 }
 

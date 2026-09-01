@@ -4,7 +4,7 @@
 		An implementation of A* for finding the shortest path between two vertices on a connected graph in 3D space.
 	</brief_description>
 	<description>
-		A* (A star) is a computer algorithm used in pathfinding and graph traversal, the process of plotting short paths among vertices (points), passing through a given set of edges (segments). It enjoys widespread use due to its performance and accuracy. Godot's A* implementation uses points in 3D space and Euclidean distances by default.
+		A* (A star) is a computer algorithm used in pathfinding and graph traversal, the process of plotting short paths among vertices (points), passing through a given set of edges (segments). It enjoys widespread use due to its performance and accuracy. Game Master's A* implementation uses points in 3D space and Euclidean distances by default.
 		You must add points manually with [method add_point] and create segments manually with [method connect_points]. Once done, you can test if there is a path between two points with the [method are_points_connected] function, get a path containing indices by [method get_id_path], or one containing actual coordinates with [method get_point_path].
 		It is also possible to use non-Euclidean distances. To do so, create a script that extends [AStar3D] and override the methods [method _compute_cost] and [method _estimate_cost]. Both should take two point IDs and return the distance between the corresponding points.
 		[b]Example:[/b] Use Manhattan distance instead of Euclidean distance:
@@ -24,7 +24,7 @@
 			return abs(u_pos.x - v_pos.x) + abs(u_pos.y - v_pos.y) + abs(u_pos.z - v_pos.z)
 		[/gdscript]
 		[csharp]
-		using Godot;
+		using Game Master;
 
 		[GlobalClass]
 		public partial class MyAStar3D : AStar3D

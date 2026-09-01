@@ -4,7 +4,7 @@
 		Provides access to the Java Native Interface.
 	</brief_description>
 	<description>
-		The JavaClassWrapper singleton provides a way for the Godot application to send and receive data through the [url=https://developer.android.com/training/articles/perf-jni]Java Native Interface[/url] (JNI).
+		The JavaClassWrapper singleton provides a way for the Game Master application to send and receive data through the [url=https://developer.android.com/training/articles/perf-jni]Java Native Interface[/url] (JNI).
 		[b]Note:[/b] This singleton is only available in Android builds.
 		[codeblock]
 		var LocalDateTime = JavaClassWrapper.wrap("java.time.LocalDateTime")
@@ -35,7 +35,7 @@
 
 				var print_proxy = PrintProxy.new()
 				var printer_object = JavaClassWrapper.create_proxy(print_proxy, ["android.util.Printer"])
-				printer_object.println("Hello Godot World!")
+				printer_object.println("Hello Game Master World!")
 				[/codeblock]
 				[b]Note:[/b] This method only works on Android. On every other platform, this method will always return [code]null[/code].
 			</description>
@@ -45,14 +45,14 @@
 			<param index="0" name="sam_interface" type="String" />
 			<param index="1" name="callable" type="Callable" />
 			<description>
-				Creates a [JavaObject] implementing the Java Single Abstract Method (SAM) interface using the Godot [Callable] as the implementation.
+				Creates a [JavaObject] implementing the Java Single Abstract Method (SAM) interface using the Game Master [Callable] as the implementation.
 				The [param sam_interface] [b]must be[/b] a Java SAM interface, meaning it must only have a single abstract method to implement.
 				The [param callable] must be able to handle the same parameter types as the SAM interface method, and must provide the same return type. The [param callable] will be invoked as a callback, passing the arguments from the Java SAM interface method.
 				[codeblock]
 				var cb = func (content: String) -&gt; void:
 					print(content)
 				var callback = JavaClassWrapper.create_sam_callback("android.util.Printer", cb)
-				callback.println("Hello Godot World!")
+				callback.println("Hello Game Master World!")
 				[/codeblock]
 				[b]Note:[/b] This method only works on Android. On every other platform, this method will always return [code]null[/code].
 			</description>
@@ -68,7 +68,7 @@
 			<return type="JavaClass" />
 			<param index="0" name="name" type="String" />
 			<description>
-				Wraps a class defined in Java, and returns it as a [JavaClass] [Object] type that Godot can interact with.
+				Wraps a class defined in Java, and returns it as a [JavaClass] [Object] type that Game Master can interact with.
 				When wrapping inner (nested) classes, use [code]$[/code] instead of [code].[/code] to separate them. For example, [code]JavaClassWrapper.wrap("android.view.WindowManager$LayoutParams")[/code] wraps the [b]WindowManager.LayoutParams[/b] class.
 				[b]Note:[/b] To invoke a constructor, call a method with the same name as the class. For example:
 				[codeblock]

@@ -148,7 +148,7 @@
 					# Undo changes to the alpha channel, which should not be modified.
 					linear_color.a = srgb_color.a
 					# Convert back to nonlinear sRGB encoding, which is required for Color in
-					# Godot unless stated otherwise.
+					# Game Master unless stated otherwise.
 					return linear_color.linear_to_srgb()
 				[/gdscript]
 				[/codeblocks]

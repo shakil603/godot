@@ -28,7 +28,7 @@
 			return ["csv"]
 		[/gdscript]
 		[csharp]
-		using Godot;
+		using Game Master;
 
 		[Tool]
 		public partial class CustomParser : EditorTranslationParserPlugin

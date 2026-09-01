@@ -47,7 +47,7 @@
 			return ResourceSaver.save(mesh, filename)
 		[/gdscript]
 		[csharp]
-		using Godot;
+		using Game Master;
 
 		public partial class MySpecialPlugin : EditorImportPlugin
 		{
@@ -215,7 +215,7 @@
 		<method name="_get_resource_type" qualifiers="virtual required const">
 			<return type="String" />
 			<description>
-				Gets the Godot resource type associated with this loader. e.g. [code]"Mesh"[/code] or [code]"Animation"[/code].
+				Gets the Game Master resource type associated with this loader. e.g. [code]"Mesh"[/code] or [code]"Animation"[/code].
 			</description>
 		</method>
 		<method name="_get_save_extension" qualifiers="virtual required const">
