@@ -1,9 +1,9 @@
-name: Test Godot project converter
-description: Test the Godot project converter.
+name: Test Game Master project converter
+description: Test the Game Master project converter.
 
 inputs:
   bin:
-    description: The path to the Godot executable
+    description: The path to the Game Master executable
     required: true
 
 runs:

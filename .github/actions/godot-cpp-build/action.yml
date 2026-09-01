@@ -3,7 +3,7 @@ description: Build godot-cpp with the provided options.
 
 inputs:
   bin:
-    description: Path to the Godot binary.
+    description: Path to the Game Master binary.
     required: true
     type: string
   scons-flags:

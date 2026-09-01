@@ -15,10 +15,10 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-AppComments=Godot Engine editor
+AppComments=Game Master editor
 ChangesEnvironment=yes
 DefaultDirName={localappdata}\Godot
-DefaultGroupName=Godot Engine
+DefaultGroupName=Game Master
 AllowNoIcons=yes
 UninstallDisplayIcon={app}\{#MyAppExeName}
 #ifdef App32Bit
@@ -37,7 +37,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "modifypath"; Description: "Add Godot to PATH environment variable"
+Name: "modifypath"; Description: "Add Game Master to PATH environment variable"
 
 [Files]
 Source: "{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion

@@ -1,2 +1,2 @@
-# Ignore both the Godot executable and generated installers.
+# Ignore both the Game Master executable and generated installers.
 *.exe

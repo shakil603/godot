@@ -69,7 +69,7 @@ STANDALONE = re.compile(
     re.VERBOSE,
 )
 
-# Phrases that mention the brand but are not ours to rename: real organisations, third-party
+# Phrases that mention the brand but are not ours to rename: real organizations, third-party
 # repositories and legal attribution. They are masked before the substitution and restored
 # afterwards, so a sentence like "supported by the Godot Foundation" survives intact.
 KEEP_PHRASES = (
@@ -83,10 +83,15 @@ KEEP_PHRASES = (
 
 # Inline code spans describe literal identifiers, paths and file names, so text inside them is
 # never a branding mention: `[code].godot[/code]`, `Godot.svg`, `~/.config/godot/`.
-INLINE_CODE_SPANS = (
-    re.compile(r"`[^`\n]+`"),
-    re.compile(r"\[code\].*?\[/code\]", re.S),
-    re.compile(r"<code>.*?</code>", re.S),
+#: One alternation, matched in a single pass. Running these patterns one after another
+#: over already-masked text lets a greedy `<code>.*?</code>` swallow a previous token, and
+#: the swallowed token then never gets restored -- invisible \x02 control characters end up
+#: in the file. Non-overlapping alternation matches cannot nest, so they always can.
+INLINE_CODE_SPANS = re.compile(
+    r"`[^`\n]+`"
+    r"|\[code\].*?\[/code\]"
+    r"|<code>.*?</code>",
+    re.S,
 )
 
 # Put this in a line's comment to skip that line on purpose (used in README.md, where the
@@ -215,11 +220,13 @@ def rewrite_line(line: str, opaque_value: bool = False) -> tuple[str, int]:
     count = 0
     result = line
     spans = []
-    for pattern in INLINE_CODE_SPANS:
-        for match in pattern.finditer(result):
-            token = f"\x02{len(spans)}\x02"
-            spans.append((token, match.group(0)))
-            result = result.replace(match.group(0), token, 1)
+
+    def _mask(match: re.Match) -> str:
+        token = f"\x02{len(spans)}\x02"
+        spans.append((token, match.group(0)))
+        return token
+
+    result = INLINE_CODE_SPANS.sub(_mask, result)
     masked = []
     for index, phrase in enumerate(KEEP_PHRASES):
         if phrase in result:
@@ -231,13 +238,14 @@ def rewrite_line(line: str, opaque_value: bool = False) -> tuple[str, int]:
             count += result.count(old)
             result = result.replace(old, new)
     result, sub_count = STANDALONE.subn(NEW_BRAND, result)
-    for token, phrase in masked + spans:
+    # Reverse order, so an outer span is put back before anything nested inside it.
+    for token, phrase in reversed(masked + spans):
         result = result.replace(token, phrase)
     return result, count + sub_count
 
 
 def rewrite_text(text: str) -> tuple[str, int]:
-    """Rewrite a whole file, honouring the plist `<key>` / value pairing."""
+    """Rewrite a whole file, honoring the plist `<key>` / value pairing."""
     out_lines = []
     total = 0
     opaque_next = False

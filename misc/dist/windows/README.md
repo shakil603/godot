@@ -2,7 +2,7 @@
 
 `godot.iss` is an [Inno Setup](https://jrsoftware.org/isinfo.php) installer file
 that can be used to build a Windows installer. The generated installer is able
-to run without Administrator privileges and can optionally add Godot to the
+to run without Administrator privileges and can optionally add Game Master to the
 user's `PATH` environment variable.
 
 To use Inno Setup on Linux, use [innoextract](https://constexpr.org/innoextract/)

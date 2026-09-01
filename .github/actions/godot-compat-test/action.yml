@@ -1,13 +1,13 @@
-name: Godot hash compatibility test
-description: Check if methods with given hashes used by the older GDExtensions still can be loaded with given Godot version.
+name: Game Master hash compatibility test
+description: Check if methods with given hashes used by the older GDExtensions still can be loaded with given Game Master version.
 
 inputs:
   bin:
-    description: Path to the Godot binary.
+    description: Path to the Game Master binary.
     required: true
     type: string
   reftags:
-    description: Reference tags of Godot versions to check (comma separated).
+    description: Reference tags of Game Master versions to check (comma separated).
     required: true
     type: string
 
