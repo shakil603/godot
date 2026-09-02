@@ -390,6 +390,118 @@ def icon_raster(size: int, background=None, mono: bool = False):
     return canvas
 
 
+def _star_points(v: float) -> str:
+    """SVG `points` string for the 12-point brand star, centered in a `v` box."""
+    g = icon_geometry(v)
+    return " ".join(f"{x:.3f},{y:.3f}" for x, y in g["star"])
+
+
+def _brand_mark_svg(units: int, fill: str, stroke: str | None = None, sw: float = 0.9) -> str:
+    """The brand star as a self-contained SVG group (no `<text>`, see icon_geometry).
+
+    Used both standalone and nested inside the editor lockup icons, so it returns
+    the inner markup rather than a full document.
+    """
+    g = icon_geometry(float(units))
+    stroke_attr = f' stroke="{stroke}" stroke-width="{sw}" stroke-linejoin="round"' if stroke else ""
+    parts = [f'<polygon points="{_star_points(units)}" fill="{fill}"{stroke_attr}/>']
+    pad_x, pad_y, pad_w, pad_h, pad_r = g["pad"]
+    plate = "#ffffff" if fill == "#ffffff" else g["ink"]
+    button = "#ffffff" if fill == "#ffffff" else g["gold"]
+    parts.append(f'<rect x="{pad_x:.3f}" y="{pad_y:.3f}" width="{pad_w:.3f}" height="{pad_h:.3f}" '
+                 f'rx="{pad_r:.3f}" fill="{plate}"/>')
+    for x, y, w, h in g["dpad"]:
+        parts.append(f'<rect x="{x:.3f}" y="{y:.3f}" width="{w:.3f}" height="{h:.3f}" rx="{min(w, h) * 0.3:.3f}" fill="{button}"/>')
+    for x, y, r in g["buttons"]:
+        parts.append(f'<circle cx="{x:.3f}" cy="{y:.3f}" r="{r:.3f}" fill="{button}"/>')
+    return "".join(parts)
+
+
+def _document(width: int, height: int, body: str) -> str:
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
+            f'viewBox="0 0 {width} {height}" role="img" aria-label="{BRAND_NAME}">{body}</svg>\n')
+
+
+def editor_icon_svgs() -> dict[str, str]:
+    """The in-editor brand icons. Filenames stay `Godot*`/`Logo` so the C++ that
+    references them by theme name is untouched; only the artwork changes. Every
+    icon is gold (#c9a24a) on the dark ink plate, so none still reads as the
+    upstream blue brand.
+    """
+    gold, ink, gold_dark = "#c9a24a", "#171921", "#8a6f2e"
+
+    def square_mark(size: int, mono: bool, intrinsic: int | None = None) -> str:
+        w = intrinsic or size
+        # Scale the 64-unit mark to the full square with a small transparent margin.
+        margin = 0.06 * size
+        s = (size - 2 * margin) / 64.0
+        tx, ty = margin, margin
+        if mono:
+            body = (f'<g transform="translate({tx:.3f},{ty:.3f})scale({s:.5f})">'
+                    f'<polygon points="{_star_points(64)}" fill="#ffffff"/></g>')
+        else:
+            body = (f'<g transform="translate({tx:.3f},{ty:.3f})scale({s:.5f})">'
+                    f'{_brand_mark_svg(64, gold, stroke=gold_dark, sw=0.9)}</g>')
+        return _document(w, w, body)
+
+    def wide_lockup(width: int, height: int) -> str:
+        # Square badge on the left, a gold rule beside it (no <text>: the editor's
+        # SVG loader renders no fonts, and these marks sit next to a real title bar).
+        m = height * 0.12
+        box = height - 2 * m
+        s = box / 64.0
+        body = (f'<g transform="translate({m:.2f},{m:.2f})scale({s:.5f})">'
+                f'{_brand_mark_svg(64, gold, stroke=gold_dark, sw=0.9)}</g>')
+        bar_x = m + box + height * 0.18
+        bar_w = width - bar_x - m
+        bar_h = max(2.0, height * 0.06)
+        bar_y = (height - bar_h) / 2
+        body += (f'<rect x="{bar_x:.2f}" y="{bar_y:.2f}" width="{bar_w:.2f}" height="{bar_h:.2f}" '
+                 f'rx="{bar_h / 2:.2f}" fill="{gold}" opacity="0.9"/>')
+        return _document(width, height, body)
+
+    def file_icon(size: int) -> str:
+        # Folded-corner file (white, semi-transparent to read as a document) with the
+        # brand mark inset where the upstream logo sat.
+        body = (f'<path fill="#ffffff" fill-opacity="0.92" d="M14 5a4 4 0 0 0-4 4v46a4 4 0 0 0 4 4h36a4 4 0 0 0 4-4V22'
+                f'a1 1 0 0 0-.29-.71l-16-16A1 1 0 0 0 37 5zm0 2h22v12a4 4 0 0 0 4 4h12v32a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"/>')
+        m = size * 0.30
+        s = (size - 2 * m) / 64.0
+        body += (f'<g transform="translate({m:.2f},{m:.2f})scale({s:.5f})">'
+                 f'{_brand_mark_svg(64, gold, stroke=gold_dark, sw=1.4)}</g>')
+        return _document(size, size, body)
+
+    def default_project_icon(size: int) -> str:
+        # New projects' default icon: a dark plate with the gold brand mark, so the
+        # Godot blue that used to ship here is gone too.
+        body = (f'<rect width="{size}" height="{size}" rx="{size * 0.18:.2f}" fill="{ink}"/>')
+        m = size * 0.16
+        s = (size - 2 * m) / 64.0
+        body += (f'<g transform="translate({m:.2f},{m:.2f})scale({s:.5f})">'
+                 f'{_brand_mark_svg(64, gold, stroke=gold_dark, sw=1.0)}</g>')
+        return _document(size, size, body)
+
+    return {
+        "editor/icons/Godot.svg": square_mark(16, mono=False),
+        "editor/icons/GodotMonochrome.svg": square_mark(16, mono=True),
+        "editor/icons/GodotFile.svg": file_icon(64),
+        "editor/icons/DefaultProjectIcon.svg": default_project_icon(128),
+        "editor/icons/Logo.svg": wide_lockup(187, 69),
+        "editor/icons/TitleBarLogo.svg": wide_lockup(100, 24),
+    }
+
+
+def emit_editor_icons(written: list[Path]) -> None:
+    """Write the in-editor brand icons from icon_geometry (no Pillow needed)."""
+    for rel, svg in editor_icon_svgs().items():
+        if not svg:
+            continue
+        path = ROOT / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(svg, encoding="utf-8", newline="")
+        written.append(path)
+
+
 def _hex_to_rgba(value: str) -> tuple:
     """`#rrggbb` (or a brand tuple) as an RGBA tuple."""
     if isinstance(value, tuple):
@@ -470,6 +582,10 @@ def generate(threshold: int) -> int:
         (ROOT / rel).parent.mkdir(parents=True, exist_ok=True)
         (ROOT / rel).write_text(svg, encoding="utf-8", newline="\n")
         written.append(ROOT / rel)
+
+    # In-editor brand icons (About menu/dialog, project manager title bar, project
+    # file icons, default project icon). Pure SVG from icon_geometry; no Pillow.
+    emit_editor_icons(written)
 
     # Linux: the hicolor ladder plus a scalable entry for the .desktop Icon= key.
     for size in HICOLOR_SIZES:
@@ -616,10 +732,16 @@ def main() -> int:
         return 0
     if args.svg_only:
         svg = icon_svg(64)
+        written: list[Path] = []
         for rel in ("misc/logo/game_master_icon.svg", "misc/dist/html/logo.svg"):
             path = ROOT / rel
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(svg, encoding="utf-8", newline="\n")
+            written.append(path)
+        # The in-editor icons are pure SVG from icon_geometry too, so they can be
+        # regenerated without Pillow.
+        emit_editor_icons(written)
+        for path in written:
             print(f"wrote {path.relative_to(ROOT)}")
         return 0
     if args.preview:
