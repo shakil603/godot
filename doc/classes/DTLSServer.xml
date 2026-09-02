@@ -39,7 +39,7 @@
 		[/gdscript]
 		[csharp]
 		// ServerNode.cs
-		using Godot;
+		using Game Master;
 
 		public partial class ServerNode : Node
 		{
@@ -110,7 +110,7 @@
 		[/gdscript]
 		[csharp]
 		// ClientNode.cs
-		using Godot;
+		using Game Master;
 		using System.Text;
 
 		public partial class ClientNode : Node

@@ -317,29 +317,29 @@
 				[codeblocks]
 				[gdscript]
 				var my_dict = {
-					"Godot" : 4,
+					"Game Master" : 4,
 					210 : null,
 				}
 
-				print(my_dict.has("Godot")) # Prints true
+				print(my_dict.has("Game Master")) # Prints true
 				print(my_dict.has(210))     # Prints true
 				print(my_dict.has(4))       # Prints false
 				[/gdscript]
 				[csharp]
 				var myDict = new Godot.Collections.Dictionary
 				{
-					{ "Godot", 4 },
+					{ "Game Master", 4 },
 					{ 210, default },
 				};
 
-				GD.Print(myDict.ContainsKey("Godot")); // Prints True
+				GD.Print(myDict.ContainsKey("Game Master")); // Prints True
 				GD.Print(myDict.ContainsKey(210));     // Prints True
 				GD.Print(myDict.ContainsKey(4));       // Prints False
 				[/csharp]
 				[/codeblocks]
 				In GDScript, this is equivalent to the [code]in[/code] operator:
 				[codeblock]
-				if "Godot" in { "Godot": 4 }:
+				if "Game Master" in { "Game Master": 4 }:
 					print("The key is here!") # Will be printed.
 				[/codeblock]
 				[b]Note:[/b] This method returns [code]true[/code] as long as the [param key] exists, even if its corresponding value is [code]null[/code].

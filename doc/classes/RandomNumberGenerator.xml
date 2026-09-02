@@ -90,7 +90,7 @@
 			[b]Note:[/b] Setting this property produces a side effect of changing the internal [member state], so make sure to initialize the seed [i]before[/i] modifying the [member state]:
 			[codeblock]
 			var rng = RandomNumberGenerator.new()
-			rng.seed = hash("Godot")
+			rng.seed = hash("Game Master")
 			rng.state = 100 # Restore to some previously saved state.
 			[/codeblock]
 		</member>

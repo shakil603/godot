@@ -262,10 +262,13 @@ def detect_modules(search_path, recursive=False):
     def is_engine(path):
         # Prevent recursively detecting modules in self and other
         # Godot sources when using `custom_modules` build option.
+        # Keyed on `module_config` rather than on short_name so that a rebranded
+        # fork (which rewrites version.py's brand fields) is still recognized as an
+        # engine copy instead of being scanned as a module.
         version_path = os.path.join(path, "version.py")
         if os.path.exists(version_path):
             with open(version_path, "r", encoding="utf-8") as f:
-                if 'short_name = "godot"' in f.read():
+                if "module_config = " in f.read():
                     return True
         return False
 

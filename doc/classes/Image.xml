@@ -165,7 +165,7 @@
 		<method name="decompress">
 			<return type="int" enum="Error" />
 			<description>
-				Decompresses the image if it is VRAM-compressed in a supported format. This increases memory utilization, but allows modifying the image. Returns [constant OK] if the format is supported, otherwise [constant ERR_UNAVAILABLE]. All VRAM-compressed formats supported by Godot can be decompressed with this method, except [constant FORMAT_ETC2_R11S], [constant FORMAT_ETC2_RG11S], and [constant FORMAT_ETC2_RGB8A1].
+				Decompresses the image if it is VRAM-compressed in a supported format. This increases memory utilization, but allows modifying the image. Returns [constant OK] if the format is supported, otherwise [constant ERR_UNAVAILABLE]. All VRAM-compressed formats supported by Game Master can be decompressed with this method, except [constant FORMAT_ETC2_R11S], [constant FORMAT_ETC2_RG11S], and [constant FORMAT_ETC2_RGB8A1].
 			</description>
 		</method>
 		<method name="detect_alpha" qualifiers="const">
@@ -345,7 +345,7 @@
 			<param index="0" name="buffer" type="PackedByteArray" />
 			<description>
 				Loads an image from the binary contents of a BMP file.
-				[b]Note:[/b] Godot's BMP module doesn't support 16-bit per pixel images. Only 1-bit, 4-bit, 8-bit, 24-bit, and 32-bit per pixel images are supported.
+				[b]Note:[/b] Game Master's BMP module doesn't support 16-bit per pixel images. Only 1-bit, 4-bit, 8-bit, 24-bit, and 32-bit per pixel images are supported.
 				[b]Note:[/b] This method is only available in engine builds with the BMP module enabled. By default, the BMP module is enabled, but it can be disabled at build-time using the [code]module_bmp_enabled=no[/code] SCons option.
 			</description>
 		</method>
@@ -383,7 +383,7 @@
 			<param index="0" name="buffer" type="PackedByteArray" />
 			<description>
 				Loads an image from the binary contents of a [url=https://github.com/KhronosGroup/KTX-Software]KTX[/url] file. Unlike most image formats, KTX can store VRAM-compressed data and embed mipmaps.
-				[b]Note:[/b] Godot's libktx implementation only supports 2D images. Cubemaps, texture arrays, and de-padding are not supported.
+				[b]Note:[/b] Game Master's libktx implementation only supports 2D images. Cubemaps, texture arrays, and de-padding are not supported.
 				[b]Note:[/b] This method is only available in engine builds with the KTX module enabled. By default, the KTX module is enabled, but it can be disabled at build-time using the [code]module_ktx_enabled=no[/code] SCons option.
 			</description>
 		</method>
@@ -481,14 +481,14 @@
 			<return type="int" enum="Error" />
 			<param index="0" name="path" type="String" />
 			<description>
-				Saves the image as a DDS (DirectDraw Surface) file to [param path]. DDS is a container format that can store textures in various compression formats, such as DXT1, DXT5, or BC7. This function will return [constant ERR_UNAVAILABLE] if Godot was compiled without the DDS module.
+				Saves the image as a DDS (DirectDraw Surface) file to [param path]. DDS is a container format that can store textures in various compression formats, such as DXT1, DXT5, or BC7. This function will return [constant ERR_UNAVAILABLE] if Game Master was compiled without the DDS module.
 				[b]Note:[/b] The DDS module may be disabled in certain builds, which means [method save_dds] will return [constant ERR_UNAVAILABLE] when it is called from an exported project.
 			</description>
 		</method>
 		<method name="save_dds_to_buffer" qualifiers="const">
 			<return type="PackedByteArray" />
 			<description>
-				Saves the image as a DDS (DirectDraw Surface) file to a byte array. DDS is a container format that can store textures in various compression formats, such as DXT1, DXT5, or BC7. This function will return an empty byte array if Godot was compiled without the DDS module.
+				Saves the image as a DDS (DirectDraw Surface) file to a byte array. DDS is a container format that can store textures in various compression formats, such as DXT1, DXT5, or BC7. This function will return an empty byte array if Game Master was compiled without the DDS module.
 				[b]Note:[/b] The DDS module may be disabled in certain builds, which means [method save_dds_to_buffer] will return an empty byte array when it is called from an exported project.
 			</description>
 		</method>
@@ -499,7 +499,7 @@
 			<param index="2" name="color_image" type="bool" default="false" />
 			<param index="3" name="max_linear_value" type="float" default="-1.0" />
 			<description>
-				Saves the image as an EXR file to [param path]. If [param grayscale] is [code]true[/code] and the image has only one channel, it will be saved explicitly as monochrome rather than one red channel. Set [param color_image] to [code]true[/code] when saving a color image, such as a screenshot. Negative values will be included when [param color_image] is [code]false[/code], which may be useful for saving raw floating point data such as a lightmap that includes negative light information. Color component values in the resulting EXR file will not exceed [param max_linear_value] if [param max_linear_value] is not negative. This function will return [constant ERR_UNAVAILABLE] if Godot was compiled without the TinyEXR module.
+				Saves the image as an EXR file to [param path]. If [param grayscale] is [code]true[/code] and the image has only one channel, it will be saved explicitly as monochrome rather than one red channel. Set [param color_image] to [code]true[/code] when saving a color image, such as a screenshot. Negative values will be included when [param color_image] is [code]false[/code], which may be useful for saving raw floating point data such as a lightmap that includes negative light information. Color component values in the resulting EXR file will not exceed [param max_linear_value] if [param max_linear_value] is not negative. This function will return [constant ERR_UNAVAILABLE] if Game Master was compiled without the TinyEXR module.
 				When saving screenshots of a project that uses HDR output, use [method Window.get_output_max_linear_value] for [param max_linear_value].
 			</description>
 		</method>
@@ -509,7 +509,7 @@
 			<param index="1" name="color_image" type="bool" default="false" />
 			<param index="2" name="max_linear_value" type="float" default="-1.0" />
 			<description>
-				Saves the image as an EXR file to a byte array. If [param grayscale] is [code]true[/code] and the image has only one channel, it will be saved explicitly as monochrome rather than one red channel. Set [param color_image] to [code]true[/code] when saving a color image, such as a screenshot. Negative values will be included when [param color_image] is [code]false[/code], which may be useful for saving raw floating point data such as a lightmap that includes negative light information. Color component values in the resulting EXR file will not exceed [param max_linear_value] if [param max_linear_value] is not negative. This function will return an empty byte array if Godot was compiled without the TinyEXR module.
+				Saves the image as an EXR file to a byte array. If [param grayscale] is [code]true[/code] and the image has only one channel, it will be saved explicitly as monochrome rather than one red channel. Set [param color_image] to [code]true[/code] when saving a color image, such as a screenshot. Negative values will be included when [param color_image] is [code]false[/code], which may be useful for saving raw floating point data such as a lightmap that includes negative light information. Color component values in the resulting EXR file will not exceed [param max_linear_value] if [param max_linear_value] is not negative. This function will return an empty byte array if Game Master was compiled without the TinyEXR module.
 				When saving screenshots of a project that uses HDR output, use [method Window.get_output_max_linear_value] for [param max_linear_value].
 			</description>
 		</method>

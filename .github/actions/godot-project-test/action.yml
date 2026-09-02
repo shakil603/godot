@@ -1,9 +1,9 @@
-name: Test Godot project
-description: Run the test Godot project.
+name: Test Game Master project
+description: Run the test Game Master project.
 
 inputs:
   bin:
-    description: The path to the Godot executable
+    description: The path to the Game Master executable
     required: true
 
 runs:

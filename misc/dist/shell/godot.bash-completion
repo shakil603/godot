@@ -1,4 +1,4 @@
-# Bash completion for the Godot editor
+# Bash completion for the Game Master editor
 # To use it, install this file in `/etc/bash_completion.d` then restart your shell.
 # You can also `source` this file directly in your shell startup file.
 #

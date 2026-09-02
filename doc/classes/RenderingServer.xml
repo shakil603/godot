@@ -1711,7 +1711,7 @@
 		<method name="get_video_adapter_api_version" qualifiers="const">
 			<return type="String" />
 			<description>
-				Returns the version of the graphics video adapter [i]currently in use[/i] (e.g. "1.2.189" for Vulkan, "3.3.0 NVIDIA 510.60.02" for OpenGL). This version may be different from the actual latest version supported by the hardware, as Godot may not always request the latest version. See also [method OS.get_video_adapter_driver_info].
+				Returns the version of the graphics video adapter [i]currently in use[/i] (e.g. "1.2.189" for Vulkan, "3.3.0 NVIDIA 510.60.02" for OpenGL). This version may be different from the actual latest version supported by the hardware, as Game Master may not always request the latest version. See also [method OS.get_video_adapter_driver_info].
 				[b]Note:[/b] When running a headless or server binary, this function returns an empty string.
 			</description>
 		</method>
@@ -3850,7 +3850,7 @@
 				Creates a 2-dimensional texture and adds it to the RenderingServer. It can be accessed with the RID that is returned. This RID will be used in all [code]texture_2d_*[/code] RenderingServer functions.
 				Once finished with your RID, you will want to free the RID using the RenderingServer's [method free_rid] method.
 				[b]Note:[/b] The equivalent resource is [Texture2D].
-				[b]Note:[/b] Not to be confused with [method RenderingDevice.texture_create], which creates the graphics API's own texture type as opposed to the Godot-specific [Texture2D] resource.
+				[b]Note:[/b] Not to be confused with [method RenderingDevice.texture_create], which creates the graphics API's own texture type as opposed to the Game Master-specific [Texture2D] resource.
 			</description>
 		</method>
 		<method name="texture_2d_get" qualifiers="const">
@@ -3957,7 +3957,7 @@
 			<param index="6" name="layers" type="int" default="1" />
 			<param index="7" name="layered_type" type="int" enum="RenderingServer.TextureLayeredType" default="0" />
 			<description>
-				Creates a texture based on a native handle that was created outside of Godot's renderer.
+				Creates a texture based on a native handle that was created outside of Game Master's renderer.
 				[b]Note:[/b] If using only the rendering device renderer, it's recommend to use [method RenderingDevice.texture_create_from_extension] together with [method RenderingServer.texture_rd_create], rather than this method. This way, the texture's format and usage can be controlled more effectively.
 			</description>
 		</method>

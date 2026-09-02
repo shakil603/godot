@@ -5,7 +5,7 @@
 	</brief_description>
 	<description>
 		This is a visionOS XR implementation. It has three modules:
-		- the CompositorServices module, to render with Godot in immersive mode
+		- the CompositorServices module, to render with Game Master in immersive mode
 		- the hand tracking module, using Apple's ARKit
 		- the spatial controller module, using Apple's ARKit and GCController.
 		Those modules can be enabled/disabled independently. The rendering module uses the CompositorServices framework to render an Immersive scene. It supports the full and mixed immersion modes. To use this module, you must set the [member EditorExportPlatformVisionOS.application/app_role] export setting to [code]Immersive[/code]. You can choose the immersion style using the [member EditorExportPlatformVisionOS.application/immersion_style] export setting. You must use the Metal rendering driver, and only the Mobile renderer is supported for now. You can initialize this interface in the [method Node._ready] method of any of your nodes as follows:

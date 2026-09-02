@@ -24,7 +24,7 @@
 		delegate void ItemDroppedEventHandler(string itemName, int amount);
 		[/csharp]
 		[/codeblocks]
-		Connecting signals is one of the most common operations in Godot and the API gives many options to do so, which are described further down. The code block below shows the recommended approach.
+		Connecting signals is one of the most common operations in Game Master and the API gives many options to do so, which are described further down. The code block below shows the recommended approach.
 		[codeblocks]
 		[gdscript]
 		func _ready():

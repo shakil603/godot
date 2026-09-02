@@ -54,11 +54,11 @@
 					}
 				}
 				[/codeblock]
-				[b]Example:[/b] Sample implementation. Colors the word [code]Godot[/code] blue.
+				[b]Example:[/b] Sample implementation. Colors the word [code]Game Master[/code] blue.
 				[codeblocks]
 				[gdscript]
 				func _get_line_syntax_highlighting(line: int) -&gt; Dictionary:
-					var pattern_text = "Godot"
+					var pattern_text = "Game Master"
 					var result = Dictionary()
 					var text_edit = get_text_edit()
 					var line_text = text_edit.get_line(line)
@@ -77,7 +77,7 @@
 				[csharp]
 				public override Dictionary _GetLineSyntaxHighlighting(int line)
 				{
-					string patternText = "Godot";
+					string patternText = "Game Master";
 					Dictionary result = new Dictionary();
 					TextEdit textEdit = GetTextEdit();
 					string lineText = textEdit.GetLine(line);

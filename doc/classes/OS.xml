@@ -29,7 +29,7 @@
 		<method name="close_midi_inputs">
 			<return type="void" />
 			<description>
-				Shuts down the system MIDI driver. Godot will no longer receive [InputEventMIDI]. See also [method open_midi_inputs] and [method get_connected_midi_inputs].
+				Shuts down the system MIDI driver. Game Master will no longer receive [InputEventMIDI]. See also [method open_midi_inputs] and [method get_connected_midi_inputs].
 				[b]Note:[/b] This method is implemented on Linux, macOS, Windows, and Web.
 			</description>
 		</method>
@@ -45,7 +45,7 @@
 			<return type="int" />
 			<param index="0" name="arguments" type="PackedStringArray" />
 			<description>
-				Creates a new instance of Godot that runs independently. The [param arguments] are used in the given order and separated by a space.
+				Creates a new instance of Game Master that runs independently. The [param arguments] are used in the given order and separated by a space.
 				If the process is successfully created, this method returns the new process's ID, which you can use to monitor the process (and potentially terminate it with [method kill]). If the process cannot be created, this method returns [code]-1[/code].
 				See [method create_process] if you wish to run a different process.
 				[b]Note:[/b] This method is implemented on Android, Linux, macOS, and Windows.
@@ -57,7 +57,7 @@
 			<param index="1" name="arguments" type="PackedStringArray" />
 			<param index="2" name="open_console" type="bool" default="false" />
 			<description>
-				Creates a new process that runs independently of Godot. It will not terminate when Godot terminates. The path specified in [param path] must exist and be an executable file or macOS [code].app[/code] bundle. The path is resolved based on the current platform. The [param arguments] are used in the given order and separated by a space.
+				Creates a new process that runs independently of Game Master. It will not terminate when Game Master terminates. The path specified in [param path] must exist and be an executable file or macOS [code].app[/code] bundle. The path is resolved based on the current platform. The [param arguments] are used in the given order and separated by a space.
 				On Windows, if [param open_console] is [code]true[/code] and the process is a console app, a new terminal window will be opened.
 				If the process is successfully created, this method returns its process ID, which you can use to monitor the process (and potentially terminate it with [method kill]). Otherwise, this method returns [code]-1[/code].
 				[b]Example:[/b] Run another instance of the project:
@@ -141,7 +141,7 @@
 			<param index="1" name="arguments" type="PackedStringArray" />
 			<param index="2" name="blocking" type="bool" default="true" />
 			<description>
-				Creates a new process that runs independently of Godot with redirected IO. It will not terminate when Godot terminates. The path specified in [param path] must exist and be an executable file or macOS [code].app[/code] bundle. The path is resolved based on the current platform. The [param arguments] are used in the given order and separated by a space.
+				Creates a new process that runs independently of Game Master with redirected IO. It will not terminate when Game Master terminates. The path specified in [param path] must exist and be an executable file or macOS [code].app[/code] bundle. The path is resolved based on the current platform. The [param arguments] are used in the given order and separated by a space.
 				If [param blocking] is [code]false[/code], created pipes work in non-blocking mode, i.e. read and write operations will return immediately. Use [method FileAccess.get_error] to check if the last read/write operation was successful.
 				If the process cannot be created, this method returns an empty [Dictionary]. Otherwise, this method returns a [Dictionary] with the following keys:
 				- [code]"stdio"[/code] - [FileAccess] to access the process stdin and stdout pipes (read/write).
@@ -180,7 +180,7 @@
 			<return type="String" />
 			<description>
 				Returns the [i]global[/i] cache data directory according to the operating system's standards.
-				On the Linux/BSD platform, this path can be overridden by setting the [code]XDG_CACHE_HOME[/code] environment variable before starting the project. See [url=$DOCS_URL/tutorials/io/data_paths.html]File paths in Godot projects[/url] in the documentation for more information. See also [method get_config_dir] and [method get_data_dir].
+				On the Linux/BSD platform, this path can be overridden by setting the [code]XDG_CACHE_HOME[/code] environment variable before starting the project. See [url=$DOCS_URL/tutorials/io/data_paths.html]File paths in Game Master projects[/url] in the documentation for more information. See also [method get_config_dir] and [method get_data_dir].
 				Not to be confused with [method get_user_data_dir], which returns the [i]project-specific[/i] user data path.
 			</description>
 		</method>
@@ -189,7 +189,7 @@
 			<description>
 				Returns the command-line arguments passed to the engine, excluding arguments processed by the engine, such as [code]--headless[/code] and [code]--fullscreen[/code].
 				[codeblock]
-				# Godot has been executed with the following command:
+				# Game Master has been executed with the following command:
 				# godot --headless --verbose --scene my_scene.tscn --custom
 				OS.get_cmdline_args() # Returns ["--scene", "my_scene.tscn", "--custom"]
 				[/codeblock]
@@ -235,7 +235,7 @@
 			<description>
 				Returns the command-line user arguments passed to the engine. User arguments are ignored by the engine and reserved for the user. They are passed after the double dash [code]--[/code] argument. [code]++[/code] may be used when [code]--[/code] is intercepted by another program (such as [code]startx[/code]).
 				[codeblock]
-				# Godot has been executed with the following command:
+				# Game Master has been executed with the following command:
 				# godot --fullscreen --custom -- --level=2 --hardcore
 
 				OS.get_cmdline_args()      # Returns ["--custom"]
@@ -248,7 +248,7 @@
 			<return type="String" />
 			<description>
 				Returns the [i]global[/i] user configuration directory according to the operating system's standards.
-				On the Linux/BSD platform, this path can be overridden by setting the [code]XDG_CONFIG_HOME[/code] environment variable before starting the project. See [url=$DOCS_URL/tutorials/io/data_paths.html]File paths in Godot projects[/url] in the documentation for more information. See also [method get_cache_dir] and [method get_data_dir].
+				On the Linux/BSD platform, this path can be overridden by setting the [code]XDG_CONFIG_HOME[/code] environment variable before starting the project. See [url=$DOCS_URL/tutorials/io/data_paths.html]File paths in Game Master projects[/url] in the documentation for more information. See also [method get_cache_dir] and [method get_data_dir].
 				Not to be confused with [method get_user_data_dir], which returns the [i]project-specific[/i] user data path.
 			</description>
 		</method>
@@ -265,7 +265,7 @@
 			<return type="String" />
 			<description>
 				Returns the [i]global[/i] user data directory according to the operating system's standards.
-				On the Linux/BSD platform, this path can be overridden by setting the [code]XDG_DATA_HOME[/code] environment variable before starting the project. See [url=$DOCS_URL/tutorials/io/data_paths.html]File paths in Godot projects[/url] in the documentation for more information. See also [method get_cache_dir] and [method get_config_dir].
+				On the Linux/BSD platform, this path can be overridden by setting the [code]XDG_DATA_HOME[/code] environment variable before starting the project. See [url=$DOCS_URL/tutorials/io/data_paths.html]File paths in Game Master projects[/url] in the documentation for more information. See also [method get_cache_dir] and [method get_config_dir].
 				Not to be confused with [method get_user_data_dir], which returns the [i]project-specific[/i] user data path.
 			</description>
 		</method>
@@ -299,7 +299,7 @@
 			<return type="String" />
 			<description>
 				Returns the file path to the current engine executable.
-				[b]Note:[/b] On macOS, if you want to launch another instance of Godot, always use [method create_instance] instead of relying on the executable path.
+				[b]Note:[/b] On macOS, if you want to launch another instance of Game Master, always use [method create_instance] instead of relying on the executable path.
 			</description>
 		</method>
 		<method name="get_granted_permissions" qualifiers="const">
@@ -592,10 +592,10 @@
 		<method name="get_user_data_dir" qualifiers="const">
 			<return type="String" />
 			<description>
-				Returns the absolute directory path where user data is written (the [code]user://[/code] directory in Godot). The path depends on the project name and [member ProjectSettings.application/config/use_custom_user_dir].
-				- On Windows, this is [code]%AppData%\Godot\app_userdata\[project_name][/code], or [code]%AppData%\[custom_name][/code] if [code]use_custom_user_dir[/code] is set. [code]%AppData%[/code] expands to [code]%UserProfile%\AppData\Roaming[/code].
-				- On macOS, this is [code]~/Library/Application Support/Godot/app_userdata/[project_name][/code], or [code]~/Library/Application Support/[custom_name][/code] if [code]use_custom_user_dir[/code] is set.
-				- On Linux and BSD, this is [code]~/.local/share/godot/app_userdata/[project_name][/code], or [code]~/.local/share/[custom_name][/code] if [code]use_custom_user_dir[/code] is set.
+				Returns the absolute directory path where user data is written (the [code]user://[/code] directory in Game Master). The path depends on the project name and [member ProjectSettings.application/config/use_custom_user_dir].
+				- On Windows, this is [code]%AppData%\Game Master\app_userdata\[project_name][/code], or [code]%AppData%\[custom_name][/code] if [code]use_custom_user_dir[/code] is set. [code]%AppData%[/code] expands to [code]%UserProfile%\AppData\Roaming[/code].
+				- On macOS, this is [code]~/Library/Application Support/Game Master/app_userdata/[project_name][/code], or [code]~/Library/Application Support/[custom_name][/code] if [code]use_custom_user_dir[/code] is set.
+				- On Linux and BSD, this is [code]~/.local/share/game_master/app_userdata/[project_name][/code], or [code]~/.local/share/[custom_name][/code] if [code]use_custom_user_dir[/code] is set.
 				- On Android and iOS, this is a sandboxed directory in either internal or external storage, depending on the user's configuration.
 				- On Web, this is a virtual directory managed by the browser.
 				If the project name is empty, [code][project_name][/code] falls back to [code][unnamed project][/code].
@@ -669,9 +669,9 @@
 		<method name="is_debug_build" qualifiers="const">
 			<return type="bool" />
 			<description>
-				Returns [code]true[/code] if the Godot binary used to run the project is a [i]debug[/i] export template, or when running in the editor.
-				Returns [code]false[/code] if the Godot binary used to run the project is a [i]release[/i] export template.
-				[b]Note:[/b] To check whether the Godot binary used to run the project is an export template (debug or release), use [code]OS.has_feature("template")[/code] instead.
+				Returns [code]true[/code] if the Game Master binary used to run the project is a [i]debug[/i] export template, or when running in the editor.
+				Returns [code]false[/code] if the Game Master binary used to run the project is a [i]release[/i] export template.
+				[b]Note:[/b] To check whether the Game Master binary used to run the project is an export template (debug or release), use [code]OS.has_feature("template")[/code] instead.
 			</description>
 		</method>
 		<method name="is_keycode_unicode" qualifiers="const">
@@ -761,7 +761,7 @@
 		<method name="open_midi_inputs">
 			<return type="void" />
 			<description>
-				Initializes the singleton for the system MIDI driver, allowing Godot to receive [InputEventMIDI]. See also [method get_connected_midi_inputs] and [method close_midi_inputs].
+				Initializes the singleton for the system MIDI driver, allowing Game Master to receive [InputEventMIDI]. See also [method get_connected_midi_inputs] and [method close_midi_inputs].
 				[b]Note:[/b] This method is implemented on Linux, macOS, Windows, and Web.
 				[b]Note:[/b] On the Web platform, Web MIDI needs to be supported by the browser. [url=https://caniuse.com/midi]For the time being[/url], it is currently supported by all major browsers, except Safari.
 				[b]Note:[/b] On the Web platform, using MIDI input requires a browser permission to be granted first. This permission request is performed when calling [method open_midi_inputs]. The browser will refrain from processing MIDI input until the user accepts the permission request.
@@ -842,7 +842,7 @@
 			<param index="0" name="variable" type="String" />
 			<param index="1" name="value" type="String" />
 			<description>
-				Sets the value of the environment variable [param variable] to [param value]. The environment variable will be set for the Godot process and any process executed with [method execute] after running [method set_environment]. The environment variable will [i]not[/i] persist to processes run after the Godot process was terminated.
+				Sets the value of the environment variable [param variable] to [param value]. The environment variable will be set for the Game Master process and any process executed with [method execute] after running [method set_environment]. The environment variable will [i]not[/i] persist to processes run after the Game Master process was terminated.
 				[b]Note:[/b] Environment variable names are case-sensitive on all platforms except Windows. The [param variable] name cannot be empty or include the [code]=[/code] character. On Windows, there is a 32767 characters limit for the combined length of [param variable], [param value], and the [code]=[/code] and null terminator characters that will be registered in the environment block.
 			</description>
 		</method>
@@ -869,7 +869,7 @@
 			<param index="0" name="enabled" type="bool" />
 			<description>
 				If [param enabled] is [code]true[/code], when opening a file for writing, a temporary file is used in its place. When closed, it is automatically applied to the target file.
-				This can useful when files may be opened by other applications, such as antiviruses, text editors, or even the Godot editor itself.
+				This can useful when files may be opened by other applications, such as antiviruses, text editors, or even the Game Master editor itself.
 			</description>
 		</method>
 		<method name="shell_open">
@@ -901,7 +901,7 @@
 			<return type="void" />
 			<param index="0" name="variable" type="String" />
 			<description>
-				Removes the given environment variable from the current environment, if it exists. The [param variable] name cannot be empty or include the [code]=[/code] character. The environment variable will be removed for the Godot process and any process executed with [method execute] after running [method unset_environment]. The removal of the environment variable will [i]not[/i] persist to processes run after the Godot process was terminated.
+				Removes the given environment variable from the current environment, if it exists. The [param variable] name cannot be empty or include the [code]=[/code] character. The environment variable will be removed for the Game Master process and any process executed with [method execute] after running [method unset_environment]. The removal of the environment variable will [i]not[/i] persist to processes run after the Game Master process was terminated.
 				[b]Note:[/b] Environment variable names are case-sensitive on all platforms except Windows.
 			</description>
 		</method>
@@ -961,7 +961,7 @@
 			Standard I/O device is invalid. No data can be received from or sent to these standard I/O devices.
 		</constant>
 		<constant name="STD_HANDLE_CONSOLE" value="1" enum="StdHandleType">
-			Standard I/O device is a console. This typically occurs when Godot is run from a terminal with no redirection. This is also used for all standard I/O devices when running Godot from the editor, at least on desktop platforms.
+			Standard I/O device is a console. This typically occurs when Game Master is run from a terminal with no redirection. This is also used for all standard I/O devices when running Game Master from the editor, at least on desktop platforms.
 		</constant>
 		<constant name="STD_HANDLE_FILE" value="2" enum="StdHandleType">
 			Standard I/O device is a regular file. This typically occurs with redirection from a terminal, e.g. [code]godot &gt; stdout.txt[/code], [code]godot &lt; stdin.txt[/code] or [code]godot &gt; stdout_stderr.txt 2&gt;&amp;1[/code].

@@ -36,14 +36,14 @@
 
 				# Create and save a cubemap. The array of images must have exactly 6 Images.
 				# The cubemap's images are specified in this order: X+, X-, Y+, Y-, Z+, Z-
-				# (in Godot's coordinate system, so Y+ is "up" and Z- is "forward").
+				# (in Game Master's coordinate system, so Y+ is "up" and Z- is "forward").
 				var cubemap = Cubemap.new()
 				cubemap.create_from_images(images)
 				ResourceSaver.save(cubemap, "res://cubemap.res", ResourceSaver.FLAG_COMPRESS)
 
 				# Create and save a cubemap array. The array of images must have a multiple of 6 Images.
 				# Each cubemap's images are specified in this order: X+, X-, Y+, Y-, Z+, Z-
-				# (in Godot's coordinate system, so Y+ is "up" and Z- is "forward").
+				# (in Game Master's coordinate system, so Y+ is "up" and Z- is "forward").
 				var cubemap_array = CubemapArray.new()
 				cubemap_array.create_from_images(images)
 				ResourceSaver.save(cubemap_array, "res://cubemap_array.res", ResourceSaver.FLAG_COMPRESS)

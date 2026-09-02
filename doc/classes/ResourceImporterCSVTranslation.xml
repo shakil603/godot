@@ -21,7 +21,7 @@
 		Letter,Message,Courrier,手紙,信件
 		[/codeblock]
 		To set the plural form of a string to use with [method Object.tr_n], add a special [code]?plural[/code] column. After setting the plural form of the source string in this column, you can add additional rows to provide translations for more plural forms. The first column and all special columns in these plural form rows must be empty.
-		Godot includes built-in plural rules for some languages. You can also customize them using a special [code]?pluralrule[/code] row. See [url=https://www.gnu.org/software/gettext/manual/html_node/Plural-forms.html]GNU gettext[/url] for examples and more info.
+		Game Master includes built-in plural rules for some languages. You can also customize them using a special [code]?pluralrule[/code] row. See [url=https://www.gnu.org/software/gettext/manual/html_node/Plural-forms.html]GNU gettext[/url] for examples and more info.
 		[codeblock lang=text]
 		en,?plural,fr,ru,zh,_Comment
 		?pluralrule,,nplurals=2; plural=(n &gt;= 2);,,,Customize the plural rule for French

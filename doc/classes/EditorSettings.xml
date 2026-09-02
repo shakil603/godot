@@ -5,7 +5,7 @@
 	</brief_description>
 	<description>
 		Object that holds the project-independent editor settings. These settings are generally visible in the [b]Editor &gt; Editor Settings[/b] menu.
-		Property names use slash delimiters to distinguish sections. Setting values can be of any [Variant] type. It's recommended to use [code]snake_case[/code] for editor settings to be consistent with the Godot editor itself.
+		Property names use slash delimiters to distinguish sections. Setting values can be of any [Variant] type. It's recommended to use [code]snake_case[/code] for editor settings to be consistent with the Game Master editor itself.
 		Editor settings are saved automatically when changed.
 		Accessing the settings can be done using the following methods, such as:
 		[codeblocks]
@@ -262,7 +262,7 @@
 			[b]Warning:[/b] Increasing this value is not recommended, as selecting too many can make the editing and inspection of remote properties unreliable.
 		</member>
 		<member name="debugger/profile_native_calls" type="bool" setter="" getter="">
-			If [code]true[/code], enables collection of profiling data from non-GDScript Godot functions, such as engine class methods. Enabling this slows execution while profiling further.
+			If [code]true[/code], enables collection of profiling data from non-GDScript Game Master functions, such as engine class methods. Enabling this slows execution while profiling further.
 		</member>
 		<member name="debugger/profiler_frame_history_size" type="int" setter="" getter="">
 			The size of the profiler's frame history. The default value (3600) allows seeing up to 60 seconds of profiling if the project renders at a constant 60 FPS. Higher values allow viewing longer periods of profiling in the graphs, especially when the project is running at high framerates.
@@ -399,7 +399,7 @@
 		<member name="editors/3d/freelook/freelook_activation_modifier" type="int" setter="" getter="">
 			The modifier key to use to enable freelook in the 3D editor (on top of pressing the right mouse button).
 			[b]Note:[/b] Regardless of this setting, the freelook toggle keyboard shortcut ([kbd]Shift + F[/kbd] by default) is always available.
-			[b]Note:[/b] On certain window managers on Linux, the [kbd]Alt[/kbd] key will be intercepted by the window manager when clicking a mouse button at the same time. This means Godot will not see the modifier key as being pressed.
+			[b]Note:[/b] On certain window managers on Linux, the [kbd]Alt[/kbd] key will be intercepted by the window manager when clicking a mouse button at the same time. This means Game Master will not see the modifier key as being pressed.
 		</member>
 		<member name="editors/3d/freelook/freelook_base_speed" type="float" setter="" getter="">
 			The base 3D freelook speed in units per second. This can be adjusted by using the mouse wheel while in freelook mode, or by holding down the "fast" or "slow" modifier keys ([kbd]Shift[/kbd] and [kbd]Alt[/kbd] by default, respectively).
@@ -466,12 +466,12 @@
 		<member name="editors/3d/navigation/navigation_scheme" type="int" setter="" getter="">
 			The navigation scheme preset to use in the 3D editor. Changing this setting will affect the mouse button and modifier keys used to navigate the 3D editor viewport.
 			All schemes can use [kbd]Mouse wheel[/kbd] to zoom.
-			- [b]Godot:[/b] [kbd]Middle mouse button[/kbd] to orbit. [kbd]Shift + Middle mouse button[/kbd] to pan. [kbd]Ctrl + Middle mouse button[/kbd] to zoom.
+			- [b]Game Master:[/b] [kbd]Middle mouse button[/kbd] to orbit. [kbd]Shift + Middle mouse button[/kbd] to pan. [kbd]Ctrl + Middle mouse button[/kbd] to zoom.
 			- [b]Maya:[/b] [kbd]Alt + Left mouse button[/kbd] to orbit. [kbd]Middle mouse button[/kbd] to pan, [kbd]Shift + Middle mouse button[/kbd] to pan 10 times faster. [kbd]Alt + Right mouse button[/kbd] to zoom.
 			- [b]Modo:[/b] [kbd]Alt + Left mouse button[/kbd] to orbit. [kbd]Alt + Shift + Left mouse button[/kbd] to pan. [kbd]Ctrl + Alt + Left mouse button[/kbd] to zoom.
 			- [b]Tablet/Trackpad:[/b] [kbd]Alt[/kbd] to orbit. [kbd]Shift[/kbd] to pan. [kbd]Ctrl[/kbd] to zoom. Enables 3-button mouse emulation mode.
 			See also [member editors/3d/navigation/orbit_mouse_button], [member editors/3d/navigation/pan_mouse_button], [member editors/3d/navigation/zoom_mouse_button], [member editors/3d/freelook/freelook_navigation_scheme], and [member editors/3d/navigation/emulate_3_button_mouse].
-			[b]Note:[/b] On certain window managers on Linux, the [kbd]Alt[/kbd] key will be intercepted by the window manager when clicking a mouse button at the same time. This means Godot will not see the modifier key as being pressed.
+			[b]Note:[/b] On certain window managers on Linux, the [kbd]Alt[/kbd] key will be intercepted by the window manager when clicking a mouse button at the same time. This means Game Master will not see the modifier key as being pressed.
 		</member>
 		<member name="editors/3d/navigation/orbit_mouse_button" type="int" setter="" getter="">
 			The mouse button that needs to be held down to orbit in the 3D editor viewport.
@@ -834,7 +834,7 @@
 		</member>
 		<member name="filesystem/external_programs/terminal_emulator" type="String" setter="" getter="">
 			The terminal emulator program to use when using [b]Open in Terminal[/b] context menu action in the FileSystem dock. You can enter an absolute path to a program binary, or a path to a program that is present in the [code]PATH[/code] environment variable.
-			If left empty, Godot will use the default terminal emulator for the system:
+			If left empty, Game Master will use the default terminal emulator for the system:
 			- [b]Windows:[/b] PowerShell
 			- [b]macOS:[/b] Terminal.app
 			- [b]Linux:[/b] The first terminal found on the system in this order: gnome-terminal, konsole, xfce4-terminal, lxterminal, kitty, alacritty, urxvt, xterm.
@@ -845,7 +845,7 @@
 		<member name="filesystem/external_programs/terminal_emulator_flags" type="String" setter="" getter="">
 			The command-line arguments to pass to the terminal emulator that is run when using [b]Open in Terminal[/b] context menu action in the FileSystem dock. See also [member filesystem/external_programs/terminal_emulator].
 			If left empty, the default flags are [code]{directory}[/code], which is replaced by the absolute path to the directory that is being opened in the terminal.
-			[b]Note:[/b] If the terminal emulator is set to PowerShell, cmd, or Konsole, Godot will automatically prepend arguments to this list, as these terminals require nonstandard arguments to open in the correct folder.
+			[b]Note:[/b] If the terminal emulator is set to PowerShell, cmd, or Konsole, Game Master will automatically prepend arguments to this list, as these terminals require nonstandard arguments to open in the correct folder.
 		</member>
 		<member name="filesystem/external_programs/vector_image_editor" type="String" setter="" getter="">
 			The program that opens vector image files when clicking "Open in External Program" option in Filesystem Dock. If not specified, the file will be opened in the system's default program.
@@ -892,12 +892,12 @@
 			[/codeblock]
 		</member>
 		<member name="filesystem/import/blender/rpc_port" type="int" setter="" getter="">
-			The port number used for Remote Procedure Call (RPC) communication with Godot's created process of the blender executable.
-			Setting this to 0 effectively disables communication with Godot and the blender process, making performance slower.
+			The port number used for Remote Procedure Call (RPC) communication with Game Master's created process of the blender executable.
+			Setting this to 0 effectively disables communication with Game Master and the blender process, making performance slower.
 		</member>
 		<member name="filesystem/import/blender/rpc_server_uptime" type="float" setter="" getter="">
 			The maximum idle uptime (in seconds) of the Blender process.
-			This prevents Godot from having to create a new process for each import within the given seconds.
+			This prevents Game Master from having to create a new process for each import within the given seconds.
 		</member>
 		<member name="filesystem/import/fbx/fbx2gltf_path" type="String" setter="" getter="">
 			The path to the FBX2glTF executable used for converting Autodesk FBX 3D scene files [code].fbx[/code] to glTF 2.0 format during import.
@@ -962,7 +962,7 @@
 			If [code]true[/code], editor inspector uses property documentation as an accessible description of the property.
 		</member>
 		<member name="interface/editor/appearance/accept_dialog_cancel_ok_buttons" type="int" setter="" getter="">
-			How to position the Cancel and OK buttons in the editor's [AcceptDialog] windows. Different platforms have different conventions for this, which can be overridden through this setting to avoid accidental clicks when using Godot on multiple platforms.
+			How to position the Cancel and OK buttons in the editor's [AcceptDialog] windows. Different platforms have different conventions for this, which can be overridden through this setting to avoid accidental clicks when using Game Master on multiple platforms.
 			- [b]Auto[/b] follows the platform convention: OK first on Windows, KDE, and LXQt; Cancel first on macOS and other Linux desktop environments.
 			- [b]Cancel First[/b] forces the Cancel/OK ordering.
 			- [b]OK First[/b] forces the OK/Cancel ordering.
@@ -1256,7 +1256,7 @@
 			The corner radius to use for interface elements (in pixels). [code]0[/code] is square.
 		</member>
 		<member name="interface/theme/custom_theme" type="String" setter="" getter="">
-			The custom theme resource to use for the editor. Must be a Godot theme resource in [code].tres[/code] or [code].res[/code] format.
+			The custom theme resource to use for the editor. Must be a Game Master theme resource in [code].tres[/code] or [code].res[/code] format.
 		</member>
 		<member name="interface/theme/draw_extra_borders" type="bool" setter="" getter="">
 			If [code]true[/code], draws additional borders around interactive UI elements in the editor. This is automatically enabled when using the [b]Black (OLED)[/b] theme preset, as this theme preset uses a fully black background.
@@ -1330,22 +1330,22 @@
 			All update modes will ignore builds with different major versions (e.g. Godot 4 -&gt; Godot 5).
 		</member>
 		<member name="network/connection/network_mode" type="int" setter="" getter="">
-			Determines whether online features, such as the Asset Store or update checks, are enabled in the editor. If this is a privacy concern, disabling these online features prevents the editor from making HTTP requests to the Godot website or third-party platforms hosting assets from the Asset Store.
-			Editor plugins and tool scripts are recommended to follow this setting. However, Godot can't prevent them from violating this rule.
+			Determines whether online features, such as the Asset Store or update checks, are enabled in the editor. If this is a privacy concern, disabling these online features prevents the editor from making HTTP requests to the Game Master website or third-party platforms hosting assets from the Asset Store.
+			Editor plugins and tool scripts are recommended to follow this setting. However, Game Master can't prevent them from violating this rule.
 		</member>
 		<member name="network/debug/remote_host" type="String" setter="" getter="">
 			The address to listen to when starting the remote debugger. This can be set to this device's local IP address to allow external clients to connect to the remote debugger (instead of restricting the remote debugger to connections from [code]localhost[/code]).
 		</member>
 		<member name="network/debug/remote_port" type="int" setter="" getter="">
-			The port to listen to when starting the remote debugger. Godot will try to use port numbers above the configured number if the configured number is already taken by another application.
+			The port to listen to when starting the remote debugger. Game Master will try to use port numbers above the configured number if the configured number is already taken by another application.
 		</member>
 		<member name="network/http_proxy/host" type="String" setter="" getter="">
 			The host to use to contact the HTTP and HTTPS proxy in the editor (for the asset store and export template downloads). See also [member network/http_proxy/port].
-			[b]Note:[/b] Godot currently doesn't automatically use system proxy settings, so you have to enter them manually here if needed.
+			[b]Note:[/b] Game Master currently doesn't automatically use system proxy settings, so you have to enter them manually here if needed.
 		</member>
 		<member name="network/http_proxy/port" type="int" setter="" getter="">
 			The port number to use to contact the HTTP and HTTPS proxy in the editor (for the asset store and export template downloads). See also [member network/http_proxy/host].
-			[b]Note:[/b] Godot currently doesn't automatically use system proxy settings, so you have to enter them manually here if needed.
+			[b]Note:[/b] Game Master currently doesn't automatically use system proxy settings, so you have to enter them manually here if needed.
 		</member>
 		<member name="network/language_server/enable_smart_resolve" type="bool" setter="" getter="">
 			If [code]true[/code] the language server will try to provide additional results when resolving symbols at the cost of showing wrong results. All symbols in the project are checked and resolved just based on their name, without taking context into account.
@@ -1369,7 +1369,7 @@
 		</member>
 		<member name="network/language_server/show_native_symbols_in_editor" type="bool" setter="" getter="">
 			The declaration of native symbols can't be resolved to a position in the file system. If [code]true[/code] the language server will instead open the documentation for native symbols in the editor.
-			[b]Note:[/b] The VSCode plugin adds additional functionality which allows viewing Godot documentation directly in VSCode, so this option is usually not needed in VSCode.
+			[b]Note:[/b] The VSCode plugin adds additional functionality which allows viewing Game Master documentation directly in VSCode, so this option is usually not needed in VSCode.
 		</member>
 		<member name="network/language_server/use_thread" type="bool" setter="" getter="">
 			If [code]true[/code] the language server will run in a separate thread, if [code]false[/code] it will run on the main thread.

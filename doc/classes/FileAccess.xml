@@ -311,8 +311,8 @@
 		<method name="get_real" qualifiers="const">
 			<return type="float" />
 			<description>
-				Returns the next bits from the file as a floating-point number. This advances the file cursor by either 4 or 8 bytes, depending on the precision used by the Godot build that saved the file.
-				If the file was saved by a Godot build compiled with the [code]precision=single[/code] option (the default), the number of read bits for that file is 32. Otherwise, if compiled with the [code]precision=double[/code] option, the number of read bits is 64.
+				Returns the next bits from the file as a floating-point number. This advances the file cursor by either 4 or 8 bytes, depending on the precision used by the Game Master build that saved the file.
+				If the file was saved by a Game Master build compiled with the [code]precision=single[/code] option (the default), the number of read bits for that file is 32. Otherwise, if compiled with the [code]precision=double[/code] option, the number of read bits is 64.
 			</description>
 		</method>
 		<method name="get_sha256" qualifiers="static">
@@ -368,7 +368,7 @@
 			<param index="2" name="compression_mode" type="int" enum="FileAccess.CompressionMode" default="0" />
 			<description>
 				Creates a new [FileAccess] object and opens a compressed file for reading or writing.
-				[b]Note:[/b] [method open_compressed] can only read files that were saved by Godot, not third-party compression formats. See [url=https://github.com/godotengine/godot/issues/28999]GitHub issue #28999[/url] for a workaround.
+				[b]Note:[/b] [method open_compressed] can only read files that were saved by Game Master, not third-party compression formats. See [url=https://github.com/godotengine/godot/issues/28999]GitHub issue #28999[/url] for a workaround.
 				Returns [code]null[/code] if opening the file failed. You can use [method get_open_error] to check the error that occurred.
 			</description>
 		</method>
@@ -614,8 +614,8 @@
 			<return type="bool" />
 			<param index="0" name="value" type="float" />
 			<description>
-				Stores a floating-point number in the file. This advances the file cursor by either 4 or 8 bytes, depending on the precision used by the current Godot build.
-				If using a Godot build compiled with the [code]precision=single[/code] option (the default), this method will save a 32-bit float. Otherwise, if compiled with the [code]precision=double[/code] option, this will save a 64-bit float. Returns [code]true[/code] if the operation is successful.
+				Stores a floating-point number in the file. This advances the file cursor by either 4 or 8 bytes, depending on the precision used by the current Game Master build.
+				If using a Game Master build compiled with the [code]precision=single[/code] option (the default), this method will save a 32-bit float. Otherwise, if compiled with the [code]precision=double[/code] option, this will save a 64-bit float. Returns [code]true[/code] if the operation is successful.
 				[b]Note:[/b] If an error occurs, the resulting value of the file position indicator is indeterminate.
 			</description>
 		</method>

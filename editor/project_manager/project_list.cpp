@@ -315,11 +315,11 @@ void ProjectListItemControl::set_unsupported_features(PackedStringArray p_featur
 				}
 
 				if (version_match_type != VersionMatchType::PROJECT_USES_SAME) {
-					String project_version_tooltip_text = TTR("This project was last edited in a different Godot version: ") + p_features[i] + "\n";
+					String project_version_tooltip_text = TTR("This project was last edited in a different Game Master version: ") + p_features[i] + "\n";
 					if (version_match_type == VersionMatchType::PROJECT_USES_OLDER_MAJOR || version_match_type == VersionMatchType::PROJECT_USES_OLDER_MINOR) {
-						project_version_tooltip_text += vformat(TTR("Opening it will upgrade it to Godot %s.%s."), GODOT_VERSION_MAJOR, GODOT_VERSION_MINOR) + "\n";
+						project_version_tooltip_text += vformat(TTR("Opening it will upgrade it to Game Master %s.%s."), GODOT_VERSION_MAJOR, GODOT_VERSION_MINOR) + "\n";
 					} else if (version_match_type == VersionMatchType::PROJECT_USES_NEWER_MAJOR || version_match_type == VersionMatchType::PROJECT_USES_NEWER_MINOR) {
-						project_version_tooltip_text += vformat(TTR("Opening it will downgrade it to Godot %s.%s."), GODOT_VERSION_MAJOR, GODOT_VERSION_MINOR) + "\n";
+						project_version_tooltip_text += vformat(TTR("Opening it will downgrade it to Game Master %s.%s."), GODOT_VERSION_MAJOR, GODOT_VERSION_MINOR) + "\n";
 						project_version_tooltip_text += TTR("Downgrading projects is not recommended.") + "\n";
 					}
 					project_different_version->set_focus_mode(FOCUS_ACCESSIBILITY);
@@ -331,8 +331,8 @@ void ProjectListItemControl::set_unsupported_features(PackedStringArray p_featur
 			} else {
 				if (p_features[i] == "3.x") {
 					version_match_type = VersionMatchType::PROJECT_USES_OLDER_MAJOR;
-					String project_version_tooltip_text = TTR("This project was last edited in a different Godot version: ") + p_features[i] + "\n";
-					project_version_tooltip_text += vformat(TTR("Opening it will upgrade it to Godot %s.%s."), GODOT_VERSION_MAJOR, GODOT_VERSION_MINOR) + "\n";
+					String project_version_tooltip_text = TTR("This project was last edited in a different Game Master version: ") + p_features[i] + "\n";
+					project_version_tooltip_text += vformat(TTR("Opening it will upgrade it to Game Master %s.%s."), GODOT_VERSION_MAJOR, GODOT_VERSION_MINOR) + "\n";
 					project_different_version->set_focus_mode(FOCUS_ACCESSIBILITY);
 					project_different_version->set_tooltip_text(project_version_tooltip_text);
 					project_different_version->show();
@@ -352,7 +352,7 @@ void ProjectListItemControl::set_unsupported_features(PackedStringArray p_featur
 		// a proper version number, it will be displayed alongside the "unknown version"
 		// warning otherwise.
 		if (unknown_version) {
-			tooltip_text += TTR("This project uses an unknown version of Godot.") + "\n";
+			tooltip_text += TTR("This project uses an unknown version of Game Master.") + "\n";
 		}
 		if (p_features.size() > 0) {
 			String unsupported_features_str = String(", ").join(p_features);
@@ -763,7 +763,7 @@ void ProjectList::_migrate_config() {
 	EditorSettings::get_singleton()->get_property_list(&properties);
 
 	for (const PropertyInfo &E : properties) {
-		// This is actually something like "projects/C:::Documents::Godot::Projects::MyGame"
+		// This is actually something like "projects/C:::Documents::Game Master::Projects::MyGame"
 		String property_key = E.name;
 		if (!property_key.begins_with("projects/")) {
 			continue;
@@ -811,7 +811,7 @@ ProjectList::Item ProjectList::load_project_data(const String &p_path, bool p_fa
 	}
 
 	if (config_version > ProjectSettings::CONFIG_VERSION) {
-		// Comes from an incompatible (more recent) Godot version, gray it out.
+		// Comes from an incompatible (more recent) Game Master version, gray it out.
 		grayed = true;
 	}
 

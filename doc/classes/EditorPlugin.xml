@@ -259,7 +259,7 @@
 		<method name="_get_plugin_name" qualifiers="virtual const">
 			<return type="String" />
 			<description>
-				Override this method in your plugin to provide the name of the plugin when displayed in the Godot editor.
+				Override this method in your plugin to provide the name of the plugin when displayed in the Game Master editor.
 				For main screen plugins, this appears at the top of the screen, to the right of the "2D", "3D", "Script", "Game", and "Asset Store" buttons.
 				[b]Note:[/b] Main screen plugins should instead use [member EditorDock.title] of a main screen dock.
 			</description>
@@ -347,7 +347,7 @@
 			<param index="0" name="scene" type="String" />
 			<param index="1" name="args" type="PackedStringArray" />
 			<description>
-				This function is called when an individual scene is about to be played in the editor. [param args] is a list of command line arguments that will be passed to the new Godot instance, which will be replaced by the list returned by this function.
+				This function is called when an individual scene is about to be played in the editor. [param args] is a list of command line arguments that will be passed to the new Game Master instance, which will be replaced by the list returned by this function.
 				[codeblock]
 				func _run_scene(scene, args):
 					args.append("--an-extra-argument")

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="GodotInstance" inherits="Object" api_type="core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../class.xsd">
 	<brief_description>
-		Provides access to an embedded Godot instance.
+		Provides access to an embedded Game Master instance.
 	</brief_description>
 	<description>
-		GodotInstance represents a running Godot instance that is controlled from an outside codebase, without a perpetual main loop. It is created by the C API [code]libgodot_create_godot_instance[/code]. Only one may be created per process.
+		GodotInstance represents a running Game Master instance that is controlled from an outside codebase, without a perpetual main loop. It is created by the C API [code]libgodot_create_godot_instance[/code]. Only one may be created per process.
 	</description>
 	<tutorials>
 	</tutorials>
