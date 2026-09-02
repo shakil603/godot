@@ -47,18 +47,42 @@ ENGINE_ASSETS = {
 HICOLOR_SIZES = (16, 24, 32, 48, 64, 128, 256, 512)
 ICO_SIZES = (16, 24, 32, 48, 64, 128, 256)
 # icns OSType -> pixel size (https://iconhandbook.co.uk/reference/chart/osx/).
-ICNS_TYPES = (("icp4", 16), ("icp5", 32), ("icp6", 64), ("ic07", 128), ("ic08", 256), ("ic09", 512), ("ic10", 1024),
-              ("ic11", 32), ("ic12", 64), ("ic13", 512), ("ic14", 1024))
+ICNS_TYPES = (
+    ("icp4", 16),
+    ("icp5", 32),
+    ("icp6", 64),
+    ("ic07", 128),
+    ("ic08", 256),
+    ("ic09", 512),
+    ("ic10", 1024),
+    ("ic11", 32),
+    ("ic12", 64),
+    ("ic13", 512),
+    ("ic14", 1024),
+)
 # Android adaptive icons are 432px wide but only the central 66% circle is visible.
 ANDROID_ADAPTIVE_SAFE_RATIO = 0.66
 # Android splash densities (the "icon" layer, centered on the background color).
 ANDROID_SPLASH_DENSITIES = (("mdpi", 108), ("hdpi", 162), ("xhdpi", 216), ("xxhdpi", 324), ("xxxhdpi", 432))
 # iOS export settings, mirroring `application/icons/*` in platform/ios/export/export_plugin.cpp.
-IOS_ICONS = (("settings_58x58", 58), ("settings_87x87", 87), ("notification_40x40", 40), ("notification_60x60", 60),
-             ("notification_76x76", 76), ("notification_114x114", 114), ("spotlight_80x80", 80),
-             ("spotlight_120x120", 120), ("iphone_120x120", 120), ("iphone_180x180", 180), ("ipad_152x152", 152),
-             ("ipad_167x167", 167), ("ios_128x128", 128), ("ios_136x136", 136), ("ios_192x192", 192),
-             ("app_store_1024x1024", 1024))
+IOS_ICONS = (
+    ("settings_58x58", 58),
+    ("settings_87x87", 87),
+    ("notification_40x40", 40),
+    ("notification_60x60", 60),
+    ("notification_76x76", 76),
+    ("notification_114x114", 114),
+    ("spotlight_80x80", 80),
+    ("spotlight_120x120", 120),
+    ("iphone_120x120", 120),
+    ("iphone_180x180", 180),
+    ("ipad_152x152", 152),
+    ("ipad_167x167", 167),
+    ("ios_128x128", 128),
+    ("ios_136x136", 136),
+    ("ios_192x192", 192),
+    ("app_store_1024x1024", 1024),
+)
 
 
 def _png_info(data: bytes) -> tuple[int, int, int, int, int]:
@@ -96,8 +120,10 @@ def check_assets() -> int:
         data = path.read_bytes()
         kind = sniff_image(data)
         if kind != "png":
-            failures.append(f"{rel}: extension is .png but the bytes are {kind.upper()}; the engine decodes the "
-                            "embedded buffer with its PNG loader, so the image silently fails to load")
+            failures.append(
+                f"{rel}: extension is .png but the bytes are {kind.upper()}; the engine decodes the "
+                "embedded buffer with its PNG loader, so the image silently fails to load"
+            )
             continue
         try:
             width, height, depth, color_type, interlace = _png_info(data)
@@ -114,8 +140,10 @@ def check_assets() -> int:
             if (width, height) != expected:
                 failures.append(f"{rel}: {width}x{height}, expected {expected[0]}x{expected[1]}")
         elif width != height or width < expected:
-            failures.append(f"{rel}: {width}x{height}, expected a square of at least {expected}px - smaller icons "
-                            "blur on HiDPI/retina displays and on Android adaptive icons")
+            failures.append(
+                f"{rel}: {width}x{height}, expected a square of at least {expected}px - smaller icons "
+                "blur on HiDPI/retina displays and on Android adaptive icons"
+            )
         elif width & (width - 1):
             failures.append(f"{rel}: {width}px is not a power of two")
 
@@ -138,8 +166,10 @@ def _pillow():
         import numpy
         from PIL import Image
     except ImportError:
-        sys.exit("Regenerating assets requires Pillow and NumPy:\n    pip install pillow numpy\n"
-                 "(`--check` and `--svg-only` run without them)")
+        sys.exit(
+            "Regenerating assets requires Pillow and NumPy:\n    pip install pillow numpy\n"
+            "(`--check` and `--svg-only` run without them)"
+        )
     return numpy, Image
 
 
@@ -285,7 +315,9 @@ def wide_logo(badge, wordmark, size=(1920, 1080)):
     badge_image = square(badge, int(height * 0.66), margin=0.0)
     if wordmark.width > 1:
         ratio = min((width * 0.40) / wordmark.width, (height * 0.18) / wordmark.height)
-        word = wordmark.resize((max(1, round(wordmark.width * ratio)), max(1, round(wordmark.height * ratio))), Image.LANCZOS)
+        word = wordmark.resize(
+            (max(1, round(wordmark.width * ratio)), max(1, round(wordmark.height * ratio))), Image.LANCZOS
+        )
     else:
         word = wordmark
     gap = int(height * 0.05)
@@ -320,13 +352,19 @@ def icon_geometry(v: float) -> dict:
     pad_x, pad_y = cx - pad_w / 2.0, cy + v * 0.015 - pad_h / 2.0
     dpad_x = cx - pad_w * 0.30
     dpad_y = pad_y + pad_h * 0.5
-    buttons = [(cx + pad_w * 0.17 + col * stick * 1.9, dpad_y + (row - 0.5) * stick * 1.9, button)
-               for row in range(2) for col in range(2)]
+    buttons = [
+        (cx + pad_w * 0.17 + col * stick * 1.9, dpad_y + (row - 0.5) * stick * 1.9, button)
+        for row in range(2)
+        for col in range(2)
+    ]
     return {
         "star": star,
         "tips": tips,
         "pad": (pad_x, pad_y, pad_w, pad_h, pad_h * 0.45),
-        "dpad": [(dpad_x - half, dpad_y - stick, half * 2, stick * 2), (dpad_x - stick, dpad_y - half, stick * 2, half * 2)],
+        "dpad": [
+            (dpad_x - half, dpad_y - stick, half * 2, stick * 2),
+            (dpad_x - stick, dpad_y - half, stick * 2, half * 2),
+        ],
         "buttons": buttons,
         "gold": "#c9a24a",
         "gold_dark": "#8a6f2e",
@@ -355,10 +393,14 @@ def icon_svg(size: int = 64, intrinsic: int = 512) -> str:
     ]
     parts += [f'  <circle cx="{x:.2f}" cy="{y:.2f}" r="{r:.2f}" fill="{g["gold"]}"/>' for x, y, r in g["tips"]]
     pad_x, pad_y, pad_w, pad_h, pad_r = g["pad"]
-    parts.append(f'  <rect x="{pad_x:.2f}" y="{pad_y:.2f}" width="{pad_w:.2f}" height="{pad_h:.2f}" '
-                 f'rx="{pad_r:.2f}" fill="{g["ink"]}"/>')
-    parts += [f'  <rect x="{x:.2f}" y="{y:.2f}" width="{w:g}" height="{h:.2f}" rx="{half:.2f}" fill="{g["gold"]}"/>'
-              for (x, y, w, h), half in zip(g["dpad"], (g["dpad"][0][2] * 0.3, g["dpad"][1][3] * 0.3))]
+    parts.append(
+        f'  <rect x="{pad_x:.2f}" y="{pad_y:.2f}" width="{pad_w:.2f}" height="{pad_h:.2f}" '
+        f'rx="{pad_r:.2f}" fill="{g["ink"]}"/>'
+    )
+    parts += [
+        f'  <rect x="{x:.2f}" y="{y:.2f}" width="{w:g}" height="{h:.2f}" rx="{half:.2f}" fill="{g["gold"]}"/>'
+        for (x, y, w, h), half in zip(g["dpad"], (g["dpad"][0][2] * 0.3, g["dpad"][1][3] * 0.3))
+    ]
     parts += [f'  <circle cx="{x:.2f}" cy="{y:.2f}" r="{r:.2f}" fill="{g["gold"]}"/>' for x, y, r in g["buttons"]]
     parts.append("</svg>")
     return "\n".join(parts) + "\n"
@@ -408,18 +450,24 @@ def _brand_mark_svg(units: int, fill: str, stroke: str | None = None, sw: float 
     pad_x, pad_y, pad_w, pad_h, pad_r = g["pad"]
     plate = "#ffffff" if fill == "#ffffff" else g["ink"]
     button = "#ffffff" if fill == "#ffffff" else g["gold"]
-    parts.append(f'<rect x="{pad_x:.3f}" y="{pad_y:.3f}" width="{pad_w:.3f}" height="{pad_h:.3f}" '
-                 f'rx="{pad_r:.3f}" fill="{plate}"/>')
+    parts.append(
+        f'<rect x="{pad_x:.3f}" y="{pad_y:.3f}" width="{pad_w:.3f}" height="{pad_h:.3f}" '
+        f'rx="{pad_r:.3f}" fill="{plate}"/>'
+    )
     for x, y, w, h in g["dpad"]:
-        parts.append(f'<rect x="{x:.3f}" y="{y:.3f}" width="{w:.3f}" height="{h:.3f}" rx="{min(w, h) * 0.3:.3f}" fill="{button}"/>')
+        parts.append(
+            f'<rect x="{x:.3f}" y="{y:.3f}" width="{w:.3f}" height="{h:.3f}" rx="{min(w, h) * 0.3:.3f}" fill="{button}"/>'
+        )
     for x, y, r in g["buttons"]:
         parts.append(f'<circle cx="{x:.3f}" cy="{y:.3f}" r="{r:.3f}" fill="{button}"/>')
     return "".join(parts)
 
 
 def _document(width: int, height: int, body: str) -> str:
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
-            f'viewBox="0 0 {width} {height}" role="img" aria-label="{BRAND_NAME}">{body}</svg>\n')
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
+        f'viewBox="0 0 {width} {height}" role="img" aria-label="{BRAND_NAME}">{body}</svg>\n'
+    )
 
 
 def editor_icon_svgs() -> dict[str, str]:
@@ -437,11 +485,15 @@ def editor_icon_svgs() -> dict[str, str]:
         s = (size - 2 * margin) / 64.0
         tx, ty = margin, margin
         if mono:
-            body = (f'<g transform="translate({tx:.3f},{ty:.3f})scale({s:.5f})">'
-                    f'<polygon points="{_star_points(64)}" fill="#ffffff"/></g>')
+            body = (
+                f'<g transform="translate({tx:.3f},{ty:.3f})scale({s:.5f})">'
+                f'<polygon points="{_star_points(64)}" fill="#ffffff"/></g>'
+            )
         else:
-            body = (f'<g transform="translate({tx:.3f},{ty:.3f})scale({s:.5f})">'
-                    f'{_brand_mark_svg(64, gold, stroke=gold_dark, sw=0.9)}</g>')
+            body = (
+                f'<g transform="translate({tx:.3f},{ty:.3f})scale({s:.5f})">'
+                f"{_brand_mark_svg(64, gold, stroke=gold_dark, sw=0.9)}</g>"
+            )
         return _document(w, w, body)
 
     def wide_lockup(width: int, height: int) -> str:
@@ -450,35 +502,45 @@ def editor_icon_svgs() -> dict[str, str]:
         m = height * 0.12
         box = height - 2 * m
         s = box / 64.0
-        body = (f'<g transform="translate({m:.2f},{m:.2f})scale({s:.5f})">'
-                f'{_brand_mark_svg(64, gold, stroke=gold_dark, sw=0.9)}</g>')
+        body = (
+            f'<g transform="translate({m:.2f},{m:.2f})scale({s:.5f})">'
+            f"{_brand_mark_svg(64, gold, stroke=gold_dark, sw=0.9)}</g>"
+        )
         bar_x = m + box + height * 0.18
         bar_w = width - bar_x - m
         bar_h = max(2.0, height * 0.06)
         bar_y = (height - bar_h) / 2
-        body += (f'<rect x="{bar_x:.2f}" y="{bar_y:.2f}" width="{bar_w:.2f}" height="{bar_h:.2f}" '
-                 f'rx="{bar_h / 2:.2f}" fill="{gold}" opacity="0.9"/>')
+        body += (
+            f'<rect x="{bar_x:.2f}" y="{bar_y:.2f}" width="{bar_w:.2f}" height="{bar_h:.2f}" '
+            f'rx="{bar_h / 2:.2f}" fill="{gold}" opacity="0.9"/>'
+        )
         return _document(width, height, body)
 
     def file_icon(size: int) -> str:
         # Folded-corner file (white, semi-transparent to read as a document) with the
         # brand mark inset where the upstream logo sat.
-        body = (f'<path fill="#ffffff" fill-opacity="0.92" d="M14 5a4 4 0 0 0-4 4v46a4 4 0 0 0 4 4h36a4 4 0 0 0 4-4V22'
-                f'a1 1 0 0 0-.29-.71l-16-16A1 1 0 0 0 37 5zm0 2h22v12a4 4 0 0 0 4 4h12v32a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"/>')
+        body = (
+            '<path fill="#ffffff" fill-opacity="0.92" d="M14 5a4 4 0 0 0-4 4v46a4 4 0 0 0 4 4h36a4 4 0 0 0 4-4V22'
+            'a1 1 0 0 0-.29-.71l-16-16A1 1 0 0 0 37 5zm0 2h22v12a4 4 0 0 0 4 4h12v32a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"/>'
+        )
         m = size * 0.30
         s = (size - 2 * m) / 64.0
-        body += (f'<g transform="translate({m:.2f},{m:.2f})scale({s:.5f})">'
-                 f'{_brand_mark_svg(64, gold, stroke=gold_dark, sw=1.4)}</g>')
+        body += (
+            f'<g transform="translate({m:.2f},{m:.2f})scale({s:.5f})">'
+            f"{_brand_mark_svg(64, gold, stroke=gold_dark, sw=1.4)}</g>"
+        )
         return _document(size, size, body)
 
     def default_project_icon(size: int) -> str:
         # New projects' default icon: a dark plate with the gold brand mark, so the
         # Godot blue that used to ship here is gone too.
-        body = (f'<rect width="{size}" height="{size}" rx="{size * 0.18:.2f}" fill="{ink}"/>')
+        body = f'<rect width="{size}" height="{size}" rx="{size * 0.18:.2f}" fill="{ink}"/>'
         m = size * 0.16
         s = (size - 2 * m) / 64.0
-        body += (f'<g transform="translate({m:.2f},{m:.2f})scale({s:.5f})">'
-                 f'{_brand_mark_svg(64, gold, stroke=gold_dark, sw=1.0)}</g>')
+        body += (
+            f'<g transform="translate({m:.2f},{m:.2f})scale({s:.5f})">'
+            f"{_brand_mark_svg(64, gold, stroke=gold_dark, sw=1.0)}</g>"
+        )
         return _document(size, size, body)
 
     return {
@@ -589,14 +651,18 @@ def generate(threshold: int) -> int:
 
     # Linux: the hicolor ladder plus a scalable entry for the .desktop Icon= key.
     for size in HICOLOR_SIZES:
-        emit(brand_mark(size, margin=0.0 if size <= 24 else 0.05, badge=badge),
-             f"misc/brand/linux/hicolor/{size}x{size}/apps/game-master.png")
+        emit(
+            brand_mark(size, margin=0.0 if size <= 24 else 0.05, badge=badge),
+            f"misc/brand/linux/hicolor/{size}x{size}/apps/game-master.png",
+        )
     (ROOT / "misc/brand/linux/hicolor/scalable/apps").mkdir(parents=True, exist_ok=True)
     (ROOT / "misc/brand/linux/hicolor/scalable/apps/game-master.svg").write_text(svg, encoding="utf-8", newline="\n")
     written.append(ROOT / "misc/brand/linux/hicolor/scalable/apps/game-master.svg")
 
     # Windows and macOS containers.
-    written.append(write_ico([brand_mark(size, badge=badge) for size in ICO_SIZES], ROOT / "misc/brand/windows/game-master.ico"))
+    written.append(
+        write_ico([brand_mark(size, badge=badge) for size in ICO_SIZES], ROOT / "misc/brand/windows/game-master.ico")
+    )
     icns = {ostype: square(badge, image_size, margin=0.0) for ostype, image_size in ICNS_TYPES}
     written.append(write_icns(icns, ROOT / "misc/brand/macos/game-master.icns"))
     written.append(write_icns(icns, ROOT / "misc/dist/macos_template.app/Contents/Resources/icon.icns"))
@@ -621,13 +687,17 @@ def generate(threshold: int) -> int:
     emit(rounded_plate(badge, 512, radius=0), "misc/brand/web/maskable-icon-512.png")
     emit(flattened(square(badge, 180, margin=0.08), 180), "misc/brand/web/apple-touch-icon.png")
     emit(square(badge, 256, margin=0.0), "misc/brand/web/favicon.png")
-    written.append(write_ico([brand_mark(size, badge=badge) for size in (16, 24, 32, 48)], ROOT / "misc/brand/web/favicon.ico"))
+    written.append(
+        write_ico([brand_mark(size, badge=badge) for size in (16, 24, 32, 48)], ROOT / "misc/brand/web/favicon.ico")
+    )
 
     # Boot splash for projects exported with this engine.
     emit(square(badge, 1024, margin=0.12), "misc/brand/splash/boot_splash.png")
     emit(wide_logo(badge, wordmark), "misc/brand/splash/boot_splash_wide.png")
 
-    print(f"Generated {len(written)} files from {SOURCE.relative_to(ROOT)} (badge cut out at {badge.width}x{badge.height}).")
+    print(
+        f"Generated {len(written)} files from {SOURCE.relative_to(ROOT)} (badge cut out at {badge.width}x{badge.height})."
+    )
     preview()  # keep the size-check sheet in step with the assets
     return 0
 
@@ -666,11 +736,11 @@ def preview() -> int:
                 continue
             icon = Image.open(source).convert("RGBA")
             tile = Image.new("RGBA", (cell, cell), backdrop)
-            tile.alpha_composite(icon.resize((cell - 2 * pad, cell - 2 * pad), Image.NEAREST if size < 64 else Image.LANCZOS),
-                                 (pad, pad))
+            tile.alpha_composite(
+                icon.resize((cell - 2 * pad, cell - 2 * pad), Image.NEAREST if size < 64 else Image.LANCZOS), (pad, pad)
+            )
             sheet.alpha_composite(tile, (pad + column * cell, pad + row * cell))
-        label(name, pad, pad + (row + 0.75) * cell,
-              fill=(230, 230, 235, 255) if row == 0 else (40, 42, 50, 255))
+        label(name, pad, pad + (row + 0.75) * cell, fill=(230, 230, 235, 255) if row == 0 else (40, 42, 50, 255))
 
     # Android adaptive: circular mask over the layered icon, plus the monochrome layer.
     adaptive_row = 2
@@ -695,13 +765,30 @@ def preview() -> int:
         (legacy, "Android legacy"),
         (layer(foreground), "adaptive (circle)"),
         (layer(monochrome, (96, 99, 116, 255)), "themed/monochrome"),
-        (Image.open(ROOT / "misc/brand/web/maskable-icon-512.png").convert("RGBA").resize((cell, cell), Image.LANCZOS), "web maskable"),
-        (Image.open(ROOT / "misc/brand/web/icon-192.png").convert("RGBA").resize((cell, cell), Image.LANCZOS), "PWA 192"),
-        (Image.open(ROOT / "misc/brand/ios/app_store_1024x1024.png").convert("RGBA").resize((cell, cell), Image.LANCZOS), "iOS app store"),
+        (
+            Image
+            .open(ROOT / "misc/brand/web/maskable-icon-512.png")
+            .convert("RGBA")
+            .resize((cell, cell), Image.LANCZOS),
+            "web maskable",
+        ),
+        (
+            Image.open(ROOT / "misc/brand/web/icon-192.png").convert("RGBA").resize((cell, cell), Image.LANCZOS),
+            "PWA 192",
+        ),
+        (
+            Image
+            .open(ROOT / "misc/brand/ios/app_store_1024x1024.png")
+            .convert("RGBA")
+            .resize((cell, cell), Image.LANCZOS),
+            "iOS app store",
+        ),
     )
     for column, (image, name) in enumerate(cells):
         x = pad + column * cell
-        draw.rectangle((x, pad + adaptive_row * cell, x + cell, pad + (adaptive_row + 1) * cell), outline=(90, 92, 104, 255))
+        draw.rectangle(
+            (x, pad + adaptive_row * cell, x + cell, pad + (adaptive_row + 1) * cell), outline=(90, 92, 104, 255)
+        )
         sheet.alpha_composite(image, (x, pad + adaptive_row * cell))
         label(name, x + 4, pad + (adaptive_row + 0.78) * cell)
 
