@@ -350,6 +350,98 @@ def wide_logo(badge, wordmark, size=(1920, 1080)):
 
 VECTOR_BELOW = 64  # at or under this size the photo artwork is mush, so the vector is used
 
+# Credit line baked into the default boot splash (main/splash.png).
+CREDIT_NAME = "SHAKIL"
+CREDIT_ROLE = "Developer & Owner"
+# Serif fonts tried in order for the credit (a gold engraved look matching the badge).
+CREDIT_FONT_CANDIDATES = (
+    "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf",
+    "/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf",
+    "/Library/Fonts/Georgia Bold.ttf",
+    "C:/Windows/Fonts/georgiab.ttf",
+)
+CREDIT_FONT_REGULAR_CANDIDATES = (
+    "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf",
+    "/usr/share/fonts/truetype/freefont/FreeSerif.ttf",
+    "/Library/Fonts/Georgia.ttf",
+    "C:/Windows/Fonts/georgia.ttf",
+)
+
+
+def _load_font(size: int, bold: bool):
+    """Return a serif font for the splash credit, or Pillow's bitmap default as a fallback."""
+    from PIL import ImageFont
+
+    for candidate in CREDIT_FONT_CANDIDATES if bold else CREDIT_FONT_REGULAR_CANDIDATES:
+        if Path(candidate).is_file():
+            return ImageFont.truetype(candidate, size)
+    return ImageFont.load_default()
+
+
+def splash_with_credit(badge, size: int = 1024):
+    """The default boot splash: the badge up top and the owner credit beneath it.
+
+    Square, power-of-two RGBA (embedded in every binary as main/splash.png). The gold text
+    carries a dark outline so it stays legible whether the boot background is the brand ink
+    or a project overrides it with a lighter colour.
+    """
+    _, Image = _pillow()
+    from PIL import ImageDraw
+
+    canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    badge_img = square(badge, int(size * 0.74), margin=0.06)
+    canvas.alpha_composite(badge_img, ((size - badge_img.width) // 2, int(size * 0.02)))
+
+    draw = ImageDraw.Draw(canvas)
+    gold = COLOR_GOLD[:3] + (255,)
+    cream = (228, 208, 165, 255)
+    outline = (12, 12, 16, 255)
+
+    def draw_centered_spaced(text, font, y, fill, spacing: int, stroke: int) -> None:
+        widths = []
+        for ch in text:
+            bb = draw.textbbox((0, 0), ch, font=font, stroke_width=stroke)
+            widths.append(bb[2] - bb[0])
+        total = sum(widths) + spacing * (len(text) - 1)
+        x = (size - total) / 2
+        for ch, ch_w in zip(text, widths):
+            bb = draw.textbbox((0, 0), ch, font=font, stroke_width=stroke)
+            draw.text(
+                (x - bb[0], y - bb[1]),
+                ch,
+                font=font,
+                fill=fill,
+                stroke_width=stroke,
+                stroke_fill=outline,
+            )
+            x += ch_w + spacing
+
+    def draw_centered(text, font, y, fill, stroke: int) -> None:
+        bb = draw.textbbox((0, 0), text, font=font, stroke_width=stroke)
+        draw.text(
+            ((size - (bb[2] - bb[0])) / 2 - bb[0], y - bb[1]),
+            text,
+            font=font,
+            fill=fill,
+            stroke_width=stroke,
+            stroke_fill=outline,
+        )
+
+    draw_centered_spaced(
+        CREDIT_NAME,
+        _load_font(int(size * 0.095), bold=True),
+        int(size * 0.80),
+        gold,
+        spacing=max(4, size // 80),
+        stroke=max(2, size // 170),
+    )
+    draw_centered(
+        CREDIT_ROLE, _load_font(int(size * 0.045), bold=False), int(size * 0.905), cream, stroke=max(1, size // 320)
+    )
+    return canvas
+
 
 def icon_geometry(v: float) -> dict[str, Any]:
     """The whole small-size icon as plain numbers, so the SVG and the raster never drift.
@@ -701,7 +793,8 @@ def generate(threshold: int) -> int:
 
     # Engine binaries embed these three; they are also the fallback icon for exports.
     emit(square(badge, cast(int, ENGINE_ASSETS["main/app_icon.png"]), margin=0.06), "main/app_icon.png")
-    emit(square(badge, cast(int, ENGINE_ASSETS["main/splash.png"]), margin=0.10), "main/splash.png")
+    # The boot splash carries the owner credit ("SHAKIL — Developer & Owner").
+    emit(splash_with_credit(badge, cast(int, ENGINE_ASSETS["main/splash.png"])), "main/splash.png")
     emit(
         wide_logo(badge, wordmark, cast(tuple[int, int], ENGINE_ASSETS["main/splash_editor.png"])),
         "main/splash_editor.png",
@@ -765,7 +858,8 @@ def generate(threshold: int) -> int:
     )
 
     # Boot splash for projects exported with this engine.
-    emit(square(badge, 1024, margin=0.12), "misc/brand/splash/boot_splash.png")
+    # Default boot splash shipped to exported projects: same owner credit as the engine splash.
+    emit(splash_with_credit(badge, 1024), "misc/brand/splash/boot_splash.png")
     emit(wide_logo(badge, wordmark), "misc/brand/splash/boot_splash_wide.png")
 
     print(
