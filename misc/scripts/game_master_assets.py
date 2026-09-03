@@ -27,9 +27,20 @@ import struct
 import sys
 from collections import deque
 from pathlib import Path
+from typing import TYPE_CHECKING, Any, cast
+
+if TYPE_CHECKING:
+    from PIL import Image as PILImage
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "misc/logo/game_master_source.jpg"
+
+
+def _write_svg(path: Path, svg: str) -> None:
+    """Write an SVG with an LF newline on every platform (the repo file-format hook)."""
+    with open(path, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(svg)
+
 
 BRAND_NAME = "Game Master"
 # Sampled from the source artwork; keep the dark tone in sync with the splash background.
@@ -38,7 +49,7 @@ COLOR_GOLD = (201, 162, 74, 255)
 
 # Embedded into every binary by main/SCsub. Must be square power-of-two RGBA PNGs,
 # large enough for a 5x HiDPI display, because the boot splash scales per monitor.
-ENGINE_ASSETS = {
+ENGINE_ASSETS: dict[str, int | tuple[int, int]] = {
     "main/app_icon.png": 512,
     "main/splash.png": 1024,
     "main/splash_editor.png": (1920, 1080),
@@ -188,7 +199,7 @@ def _background_mask(image, threshold: int, step: int):
     whiteish = (rgb.min(axis=2) >= threshold) & ((rgb.max(axis=2) - rgb.min(axis=2)) <= 18)
 
     mask = numpy.zeros(whiteish.shape, dtype=bool)
-    queue = deque()
+    queue: deque[tuple[int, int]] = deque()
     rows, cols = whiteish.shape
 
     def seed(y: int, x: int) -> None:
@@ -330,7 +341,7 @@ def wide_logo(badge, wordmark, size=(1920, 1080)):
 VECTOR_BELOW = 64  # at or under this size the photo artwork is mush, so the vector is used
 
 
-def icon_geometry(v: float) -> dict:
+def icon_geometry(v: float) -> dict[str, Any]:
     """The whole small-size icon as plain numbers, so the SVG and the raster never drift.
 
     Only solid fills and simple shapes: no text (Godot's SVG loader has no <text>, and a
@@ -560,11 +571,11 @@ def emit_editor_icons(written: list[Path]) -> None:
             continue
         path = ROOT / rel
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(svg, encoding="utf-8", newline="")
+        _write_svg(path, svg)
         written.append(path)
 
 
-def _hex_to_rgba(value: str) -> tuple:
+def _hex_to_rgba(value: str | tuple[int, ...]) -> tuple[int, ...]:
     """`#rrggbb` (or a brand tuple) as an RGBA tuple."""
     if isinstance(value, tuple):
         return value
@@ -586,7 +597,7 @@ def _save(image, path: Path) -> Path:
     return path
 
 
-def write_ico(images: list, path: Path) -> Path:
+def write_ico(images: list[PILImage.Image], path: Path) -> Path:
     """Container of PNG-compressed .ico entries (Vista and later)."""
     import io
 
@@ -608,7 +619,7 @@ def write_ico(images: list, path: Path) -> Path:
     return path
 
 
-def write_icns(images: dict, path: Path) -> Path:
+def write_icns(images: dict[str, PILImage.Image], path: Path) -> Path:
     """`icns` container: each entry is a PNG payload tagged with an OSType."""
     import io
 
@@ -631,9 +642,12 @@ def generate(threshold: int) -> int:
         written.append(_save(image, ROOT / rel))
 
     # Engine binaries embed these three; they are also the fallback icon for exports.
-    emit(square(badge, ENGINE_ASSETS["main/app_icon.png"], margin=0.06), "main/app_icon.png")
-    emit(square(badge, ENGINE_ASSETS["main/splash.png"], margin=0.10), "main/splash.png")
-    emit(wide_logo(badge, wordmark, ENGINE_ASSETS["main/splash_editor.png"]), "main/splash_editor.png")
+    emit(square(badge, cast(int, ENGINE_ASSETS["main/app_icon.png"]), margin=0.06), "main/app_icon.png")
+    emit(square(badge, cast(int, ENGINE_ASSETS["main/splash.png"]), margin=0.10), "main/splash.png")
+    emit(
+        wide_logo(badge, wordmark, cast(tuple[int, int], ENGINE_ASSETS["main/splash_editor.png"])),
+        "main/splash_editor.png",
+    )
 
     # Masters.
     emit(square(badge, 1024, margin=0.0), "misc/logo/game_master_badge.png")
@@ -642,7 +656,7 @@ def generate(threshold: int) -> int:
     svg = icon_svg(64)
     for rel in ("misc/logo/game_master_icon.svg", "misc/dist/html/logo.svg"):
         (ROOT / rel).parent.mkdir(parents=True, exist_ok=True)
-        (ROOT / rel).write_text(svg, encoding="utf-8", newline="\n")
+        _write_svg(ROOT / rel, svg)
         written.append(ROOT / rel)
 
     # In-editor brand icons (About menu/dialog, project manager title bar, project
@@ -656,7 +670,7 @@ def generate(threshold: int) -> int:
             f"misc/brand/linux/hicolor/{size}x{size}/apps/game-master.png",
         )
     (ROOT / "misc/brand/linux/hicolor/scalable/apps").mkdir(parents=True, exist_ok=True)
-    (ROOT / "misc/brand/linux/hicolor/scalable/apps/game-master.svg").write_text(svg, encoding="utf-8", newline="\n")
+    _write_svg(ROOT / "misc/brand/linux/hicolor/scalable/apps/game-master.svg", svg)
     written.append(ROOT / "misc/brand/linux/hicolor/scalable/apps/game-master.svg")
 
     # Windows and macOS containers.
@@ -725,7 +739,7 @@ def preview() -> int:
     except Exception:  # noqa: BLE001
         font = None
 
-    def label(text: str, x: int, y: int, fill=(230, 230, 235, 255)) -> None:
+    def label(text: str, x: float, y: float, fill=(230, 230, 235, 255)) -> None:
         if font is not None:
             draw.text((x, y), text, fill=fill, font=font)
 
@@ -751,7 +765,7 @@ def preview() -> int:
     mask = Image.new("L", (cell, cell), 0)
     ImageDraw.Draw(mask).ellipse((0, 0, cell - 1, cell - 1), fill=255)
 
-    def layer(source_image: Image.Image, tint=None) -> Image.Image:
+    def layer(source_image: PILImage.Image, tint=None) -> PILImage.Image:
         scaled = source_image.resize((cell, cell), Image.LANCZOS)
         canvas = background.resize((cell, cell), Image.LANCZOS).copy()
         if tint is not None:
@@ -823,7 +837,7 @@ def main() -> int:
         for rel in ("misc/logo/game_master_icon.svg", "misc/dist/html/logo.svg"):
             path = ROOT / rel
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(svg, encoding="utf-8", newline="\n")
+            _write_svg(path, svg)
             written.append(path)
         # The in-editor icons are pure SVG from icon_geometry too, so they can be
         # regenerated without Pillow.
