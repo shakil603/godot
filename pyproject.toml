@@ -73,6 +73,13 @@ skip = [
 	"DONORS.md",
 	"editor/import/unicode_ranges.inc",
 	"editor/project_converter_3_to_4.cpp",
+	# Game Master brand SVGs embed base64-encoded PNG artwork, which codespell
+	# mistakes for misspelled words and corrupts when writing fixes.
+	"editor/icons/DefaultProjectIcon.svg",
+	"editor/icons/Logo.svg",
+	"misc/brand/linux/hicolor/scalable/apps/game-master.svg",
+	"misc/dist/html/logo.svg",
+	"misc/logo/game_master_icon.svg",
 	"platform/android/java/lib/src/main/java/com/*",
 	"platform/web/package-lock.json",
 ]
