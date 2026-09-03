@@ -110,7 +110,17 @@ ext.generateGodotLibraryVersion = { List<String> requiredKeys ->
         List<String> lines = versionFile.readLines()
         for (String line in lines) {
             String[] keyValue = line.split("=")
+            // Skip comment lines, blank lines and anything else that is not a
+            // simple `key = "value"` assignment (e.g. lines without an `=`).
+            // version.py contains a large comment header; indexing keyValue[1]
+            // unconditionally throws "Index 1 out of bounds" on those lines.
+            if (keyValue.length < 2) {
+                continue
+            }
             String key = keyValue[0].trim()
+            if (key.startsWith("#")) {
+                continue
+            }
             String value = keyValue[1].trim().replaceAll("\"", "")
 
             if (requiredKeys.contains(key)) {
