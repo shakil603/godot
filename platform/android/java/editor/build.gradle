@@ -86,7 +86,7 @@ android {
 
         missingDimensionStrategy 'products', 'editor'
         manifestPlaceholders += [
-            editorAppName: "Godot Engine 4",
+            editorAppName: "Game Master",
             editorBuildSuffix: ""
         ]
 
@@ -132,8 +132,10 @@ android {
 
     buildTypes {
         debug {
+            // Keep the applicationId suffix so a debug and a store build can coexist, but the
+            // visible launcher name stays the plain brand (no " (debug)" tag).
             applicationIdSuffix ".debug"
-            manifestPlaceholders += [editorBuildSuffix: " (debug)"]
+            manifestPlaceholders += [editorBuildSuffix: ""]
             signingConfig signingConfigs.debug
         }
 

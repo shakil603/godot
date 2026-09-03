@@ -75,6 +75,16 @@ ICNS_TYPES = (
 ANDROID_ADAPTIVE_SAFE_RATIO = 0.66
 # Android splash densities (the "icon" layer, centered on the background color).
 ANDROID_SPLASH_DENSITIES = (("mdpi", 108), ("hdpi", 162), ("xhdpi", 216), ("xxhdpi", 324), ("xxxhdpi", 432))
+# Launcher mipmaps shipped by the `lib` Android module: (density, legacy icon.webp, adaptive layer size).
+# Adaptive layers are 108/162/... (the outer 33% is masked off by the launcher), the legacy icon.webp is 48dp.
+ANDROID_LAUNCHER_DENSITIES = (
+    ("mdpi", 48, 108),
+    ("hdpi", 72, 162),
+    ("xhdpi", 96, 216),
+    ("xxhdpi", 144, 324),
+    ("xxxhdpi", 192, 432),
+)
+ANDROID_LIB_RES = ROOT / "platform/android/java/lib/src/main/res"
 # iOS export settings, mirroring `application/icons/*` in platform/ios/export/export_plugin.cpp.
 IOS_ICONS = (
     ("settings_58x58", 58),
@@ -634,6 +644,54 @@ def write_icns(images: dict[str, PILImage.Image], path: Path) -> Path:
     return path
 
 
+def write_android_launcher(badge, written: list[Path]) -> None:
+    """Replace the Godot-blue launcher mipmaps in the Android `lib` module.
+
+    The editor APK's `@mipmap/themed_icon` (and the fallback `icon.webp`) are the
+    icons Android shows on the home screen, so they must be the Game Master badge
+    rather than the upstream robot. Adaptive layers follow the launcher's 66% safe
+    zone; the legacy icon gets the badge on an opaque dark rounded square for old
+    devices. These same resources seed the default icon of exported projects.
+    """
+    _, Image = _pillow()
+
+    def save(img, rel: str) -> None:
+        path = ANDROID_LIB_RES / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        img.save(path, "WEBP", lossless=True, quality=100)
+        written.append(path)
+
+    def legacy_icon(size: int) -> PILImage.Image:
+        # Full-bleed opaque dark square with the badge centered (no transparent corners on pre-API26).
+        img: PILImage.Image = Image.new("RGBA", (size, size), COLOR_DARK)
+        img.alpha_composite(square(badge, size, margin=0.10))
+        return img
+
+    def monochrome_icon(size: int) -> PILImage.Image:
+        # Themed (API 33+) monochrome layer: a white silhouette of the real badge, not a glyph.
+        safe = square(badge, size, margin=(1.0 - ANDROID_ADAPTIVE_SAFE_RATIO) / 2.0)
+        mono: PILImage.Image = Image.new("RGBA", (size, size), (255, 255, 255, 255))
+        mono.putalpha(safe.split()[3])
+        return mono
+
+    for density, legacy_size, adaptive_size in ANDROID_LAUNCHER_DENSITIES:
+        folder = f"mipmap-{density}"
+        save(legacy_icon(legacy_size), f"{folder}/icon.webp")
+        # Adaptive foreground: the badge inside the 66% safe circle, transparent around it.
+        margin = (1.0 - ANDROID_ADAPTIVE_SAFE_RATIO) / 2.0
+        save(square(badge, adaptive_size, margin=margin), f"{folder}/icon_foreground.webp")
+        # Adaptive background: the solid dark plate, full bleed.
+        save(Image.new("RGB", (adaptive_size, adaptive_size), COLOR_DARK[:3]), f"{folder}/icon_background.webp")
+        # Monochrome layer (themed icons): a white silhouette of the badge.
+        save(monochrome_icon(adaptive_size), f"{folder}/icon_monochrome.webp")
+
+    # Density-less fallback mipmap/ folder used when no density-specific match exists.
+    save(legacy_icon(192), "mipmap/icon.webp")
+    save(square(badge, 108, margin=(1.0 - ANDROID_ADAPTIVE_SAFE_RATIO) / 2.0), "mipmap/icon_foreground.webp")
+    save(Image.new("RGB", (108, 108), COLOR_DARK[:3]), "mipmap/icon_background.webp")
+    save(monochrome_icon(108), "mipmap/icon_monochrome.webp")
+
+
 def generate(threshold: int) -> int:
     badge, wordmark = keyed_source(threshold=threshold)
     written: list[Path] = []
@@ -682,6 +740,7 @@ def generate(threshold: int) -> int:
     written.append(write_icns(icns, ROOT / "misc/dist/macos_template.app/Contents/Resources/icon.icns"))
 
     # Android: opaque legacy icon, adaptive layers, splash per density.
+    write_android_launcher(badge, written)  # launcher mipmaps (home-screen icon) for the editor & exports
     emit(rounded_plate(badge, 192), "misc/brand/android/main_192x192.png")
     margin = (1.0 - ANDROID_ADAPTIVE_SAFE_RATIO) / 2.0
     emit(square(badge, 432, margin=margin), "misc/brand/android/adaptive_foreground_432x432.png")
@@ -771,7 +830,7 @@ def preview() -> int:
         if tint is not None:
             canvas = Image.new("RGBA", (cell, cell), tint)
         canvas.alpha_composite(scaled)
-        out = Image.new("RGBA", (cell, cell), (0, 0, 0, 0))
+        out: PILImage.Image = Image.new("RGBA", (cell, cell), (0, 0, 0, 0))
         out.paste(canvas, (0, 0), mask)
         return out
 
