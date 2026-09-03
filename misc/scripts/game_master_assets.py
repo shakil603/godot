@@ -22,6 +22,8 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import base64
+import io
 import math
 import struct
 import sys
@@ -583,7 +585,59 @@ def _document(width: int, height: int, body: str) -> str:
     )
 
 
-def editor_icon_svgs() -> dict[str, str]:
+# --- Raster (real badge) SVG logos -------------------------------------------------------------
+# Godot renders SVG with ThorVG, which supports an embedded <image> of a base64 PNG. For the
+# larger, prominent logos we embed the actual photographed badge (re-rendered at ~2x the display
+# size for HiDPI) so they match the brand logo exactly instead of a hand-drawn glyph. Small
+# toolbar/monochrome icons stay flat vector (they are tinted and unreadable as photos at 16px).
+
+
+def _embed_image_svg(image, css_w: int, css_h: int) -> str:
+    """Wrap a PIL image as an SVG that embeds a base64 PNG scaled to the CSS size (2x render)."""
+    buffer = io.BytesIO()
+    image.save(buffer, "PNG", optimize=True)
+    data = base64.b64encode(buffer.getvalue()).decode("ascii")
+    body = f'<image width="{css_w}" height="{css_h}" href="data:image/png;base64,{data}"/>'
+    return _document(css_w, css_h, body)
+
+
+def _wide_logo_svg(badge, css_w: int = 187, css_h: int = 69, scale: int = 2):
+    """Wide brand lockup: real badge on the left, a gold rule beside it, as one embedded image."""
+    _, Image = _pillow()
+    from PIL import ImageDraw
+
+    w, h = css_w * scale, css_h * scale
+    canvas = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    badge_img = square(badge, h, margin=0.06)
+    canvas.alpha_composite(badge_img, (0, (h - badge_img.height) // 2))
+    bar_x = badge_img.width + int(h * 0.12)
+    draw = ImageDraw.Draw(canvas)
+    bar_h = max(2, int(h * 0.06))
+    draw.rounded_rectangle(
+        (bar_x, (h - bar_h) // 2, w - int(h * 0.04), (h + bar_h) // 2), radius=bar_h // 2, fill=COLOR_GOLD
+    )
+    return _embed_image_svg(canvas, css_w, css_h)
+
+
+def _default_project_icon_svg(badge, css: int = 128, scale: int = 2):
+    """New-project icon: opaque dark rounded plate with the real badge, as one embedded image."""
+    size = css * scale
+    _, Image = _pillow()
+    from PIL import ImageDraw
+
+    plate = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    ImageDraw.Draw(plate).rounded_rectangle((0, 0, size - 1, size - 1), radius=int(size * 0.18), fill=COLOR_DARK)
+    plate.alpha_composite(square(badge, size, margin=0.10))
+    return _embed_image_svg(plate, css, css)
+
+
+def _standalone_badge_svg(badge, css: int = 512, margin: float = 0.08):
+    """Square transparent badge for the web/linux/logo standalone marks, as one embedded image."""
+    image = square(badge, css, margin=margin)
+    return _embed_image_svg(image, css, css)
+
+
+def editor_icon_svgs(badge=None) -> dict[str, str]:
     """The in-editor brand icons. Filenames stay `Godot*`/`Logo` so the C++ that
     references them by theme name is untouched; only the artwork changes. Every
     icon is gold (#c9a24a) on the dark ink plate, so none still reads as the
@@ -657,18 +711,23 @@ def editor_icon_svgs() -> dict[str, str]:
         return _document(size, size, body)
 
     return {
+        # Toolbar/monochrome icons stay flat vector (tinted and used at 16px).
         "editor/icons/Godot.svg": square_mark(16, mono=False),
         "editor/icons/GodotMonochrome.svg": square_mark(16, mono=True),
         "editor/icons/GodotFile.svg": file_icon(64),
-        "editor/icons/DefaultProjectIcon.svg": default_project_icon(128),
-        "editor/icons/Logo.svg": wide_lockup(187, 69),
         "editor/icons/TitleBarLogo.svg": wide_lockup(100, 24),
+        # Prominent large logos embed the real photographed badge so they match the brand logo.
+        "editor/icons/DefaultProjectIcon.svg": _default_project_icon_svg(badge)
+        if badge is not None
+        else default_project_icon(128),
+        "editor/icons/Logo.svg": _wide_logo_svg(badge) if badge is not None else wide_lockup(187, 69),
     }
 
 
-def emit_editor_icons(written: list[Path]) -> None:
-    """Write the in-editor brand icons from icon_geometry (no Pillow needed)."""
-    for rel, svg in editor_icon_svgs().items():
+def emit_editor_icons(written: list[Path], badge=None) -> None:
+    """Write the in-editor brand icons. Uses icon_geometry vector glyphs, or the real badge
+    (raster-embedded) for the large logos when `badge` is supplied by a full regeneration."""
+    for rel, svg in editor_icon_svgs(badge).items():
         if not svg:
             continue
         path = ROOT / rel
@@ -804,15 +863,16 @@ def generate(threshold: int) -> int:
     emit(square(badge, 1024, margin=0.0), "misc/logo/game_master_badge.png")
     emit(wordmark, "misc/logo/game_master_wordmark.png")
     emit(wide_logo(badge, wordmark), "misc/logo/game_master_logo_wide.png")
-    svg = icon_svg(64)
+    # Standalone marks (repo logo, web export shell) embed the real photographed badge.
+    standalone_svg = _standalone_badge_svg(badge, css=512)
     for rel in ("misc/logo/game_master_icon.svg", "misc/dist/html/logo.svg"):
         (ROOT / rel).parent.mkdir(parents=True, exist_ok=True)
-        _write_svg(ROOT / rel, svg)
+        _write_svg(ROOT / rel, standalone_svg)
         written.append(ROOT / rel)
 
-    # In-editor brand icons (About menu/dialog, project manager title bar, project
-    # file icons, default project icon). Pure SVG from icon_geometry; no Pillow.
-    emit_editor_icons(written)
+    # In-editor brand icons (About dialog big logo, default project icon embed the real
+    # badge; small toolbar/title/monochrome icons stay flat vector glyphs).
+    emit_editor_icons(written, badge=badge)
 
     # Linux: the hicolor ladder plus a scalable entry for the .desktop Icon= key.
     for size in HICOLOR_SIZES:
@@ -821,7 +881,7 @@ def generate(threshold: int) -> int:
             f"misc/brand/linux/hicolor/{size}x{size}/apps/game-master.png",
         )
     (ROOT / "misc/brand/linux/hicolor/scalable/apps").mkdir(parents=True, exist_ok=True)
-    _write_svg(ROOT / "misc/brand/linux/hicolor/scalable/apps/game-master.svg", svg)
+    _write_svg(ROOT / "misc/brand/linux/hicolor/scalable/apps/game-master.svg", standalone_svg)
     written.append(ROOT / "misc/brand/linux/hicolor/scalable/apps/game-master.svg")
 
     # Windows and macOS containers.
