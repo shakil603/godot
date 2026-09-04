@@ -1895,8 +1895,9 @@ void GameMasterAgent::_process_asset_queue() {
 		headers.push_back("Authorization: Bearer " + image_api_key);
 		body["model"] = image_model.is_empty() ? "gpt-image-1" : image_model;
 		body["prompt"] = prompt + ". Game asset, clean edges.";
-		int w = current_asset_job.get("width", 1024);
-		body["size"] = w <= 512 ? "1024x1024" : "1024x1024";
+		// Generate at the API's smallest square size; the result is downscaled to the requested
+		// width/height once it arrives (see _on_asset_completed).
+		body["size"] = "1024x1024";
 		body["n"] = 1;
 		if (String(body["model"]).begins_with("dall-e")) {
 			body["response_format"] = "b64_json";
