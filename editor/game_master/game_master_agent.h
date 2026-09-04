@@ -32,7 +32,7 @@
 
 // Game Master: the multi-agent AI orchestrator that lives inside the editor.
 //
-// One user request is routed through a pipeline of specialised agents. Each agent is
+// One user request is routed through a pipeline of specialized agents. Each agent is
 // a *role* (a system prompt + a tool set + a token budget) that runs on whichever LLM
 // backend the user configured in Editor Settings > Game Master. The agents never
 // hand code back to the user to paste: every tool call is executed directly against

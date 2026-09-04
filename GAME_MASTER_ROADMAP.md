@@ -75,7 +75,7 @@ that you can regenerate later.
 until the `.glb` is dropped in (polling is Phase 3 below).
 
 ### 5. Later phases (not needed now)
-- **Voice/TTS** for dialogue: ElevenLabs TTS or OpenAI TTS (same keys as above).
+- **Voice/TTS** for dialog: ElevenLabs TTS or OpenAI TTS (same keys as above).
 - **APK export**: no API — needs Android SDK + JDK 17 + this fork's export templates (already part of the engine).
 
 ---
@@ -122,7 +122,7 @@ and shown in plain language in the chat instead of silently failing.
 - [ ] Async polling for Meshy/Tripo 3D jobs → auto-import `.glb`
 - [ ] Sprite-sheet slicing + automatic `SpriteFrames` from a single generated sheet
 - [ ] Rigged 3D animation via Mixamo-style APIs; 2D skeletal animation
-- [ ] TTS dialogue and voice-over
+- [ ] TTS dialog and voice-over
 - [ ] Asset Library search agent (reuse free CC0 assets before generating)
 
 ### Phase 4 — ship
