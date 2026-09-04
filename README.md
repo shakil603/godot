@@ -14,6 +14,18 @@ games from a unified interface, with a comprehensive set of [common tools][upstr
 Games export with one click to desktop (Linux, macOS, Windows), mobile (Android, iOS) and the
 Web.
 
+## Game Master AI agents
+
+The editor ships a **Game Master** chat dock (bottom-right, `Ctrl+Shift+G`). Describe a game;
+a team of AI agents — Planner, Coder, Artist/Animator/Composer, Reviewer, Memory — writes the
+scenes, scripts, input map, assets and project settings *directly into the open project*,
+validates every script with the real GDScript parser, fixes errors line by line and remembers
+what it built for the next request. Bring your own API key (OpenAI-compatible, Anthropic,
+Gemini or a local Ollama server); image, audio and 3D generation keys are optional.
+
+See [`GAME_MASTER_ROADMAP.md`](GAME_MASTER_ROADMAP.md) for the architecture, the list of
+supported APIs, and the phased roadmap. Source: `editor/game_master/`.
+
 ## What this fork changes, and what it deliberately does not
 
 Renamed (branding only):

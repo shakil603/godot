@@ -82,6 +82,7 @@ if env.editor_build:
     SConscript("docks/SCsub")
     SConscript("export/SCsub")
     SConscript("file_system/SCsub")
+    SConscript("game_master/SCsub")
     SConscript("gui/SCsub")
     SConscript("icons/SCsub")
     SConscript("inspector/SCsub")
