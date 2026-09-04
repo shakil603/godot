@@ -333,11 +333,11 @@ EditorThemeManager::ThemeConfiguration EditorThemeManager::_create_theme_config(
 			} else if (config.preset == "Breeze Dark") {
 				preset_accent_color = Color(0.239, 0.682, 0.914);
 				preset_base_color = Color(0.1255, 0.1373, 0.149);
-			} else if (config.preset == "Godot 2") {
+			} else if (config.preset == "Classic Dark" || config.preset == "Godot 2") {
 				preset_accent_color = Color(0.53, 0.67, 0.89);
 				preset_base_color = Color(0.24, 0.23, 0.27);
 				preset_icon_saturation = 1;
-			} else if (config.preset == "Godot 3") {
+			} else if (config.preset == "Classic Blue" || config.preset == "Godot 3") {
 				preset_accent_color = Color(0.44, 0.73, 0.98);
 				preset_base_color = Color(0.21, 0.24, 0.29);
 				preset_icon_saturation = 1;

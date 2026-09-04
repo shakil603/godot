@@ -1,16 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 64 64" role="img" aria-label="Game Master logo">
-  <polygon points="32.00,1.92 39.52,18.97 58.05,16.96 47.04,32.00 58.05,47.04 39.52,45.03 32.00,62.08 24.48,45.03 5.95,47.04 16.96,32.00 5.95,16.96 24.48,18.97" fill="#c9a24a" stroke="#8a6f2e" stroke-width="0.90" stroke-linejoin="round"/>
-  <circle cx="32.00" cy="1.92" r="3.33" fill="#c9a24a"/>
-  <circle cx="58.05" cy="16.96" r="3.33" fill="#c9a24a"/>
-  <circle cx="58.05" cy="47.04" r="3.33" fill="#c9a24a"/>
-  <circle cx="32.00" cy="62.08" r="3.33" fill="#c9a24a"/>
-  <circle cx="5.95" cy="47.04" r="3.33" fill="#c9a24a"/>
-  <circle cx="5.95" cy="16.96" r="3.33" fill="#c9a24a"/>
-  <rect x="17.28" y="26.24" width="29.44" height="13.44" rx="6.05" fill="#171921"/>
-  <rect x="22.27" y="29.89" width="1.792" height="6.14" rx="0.54" fill="#c9a24a"/>
-  <rect x="20.10" y="32.06" width="6.144" height="1.79" rx="0.54" fill="#c9a24a"/>
-  <circle cx="37.00" cy="30.04" r="1.79" fill="#c9a24a"/>
-  <circle cx="42.84" cy="30.04" r="1.79" fill="#c9a24a"/>
-  <circle cx="37.00" cy="35.88" r="1.79" fill="#c9a24a"/>
-  <circle cx="42.84" cy="35.88" r="1.79" fill="#c9a24a"/>
+  <rect width="64" height="64" rx="12" fill="#0a0a0a"/>
+  <text x="32" y="42" text-anchor="middle" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#d4af37">GM</text>
+  <rect x="18" y="48" width="28" height="1.5" fill="#f5f5f5"/>
 </svg>
