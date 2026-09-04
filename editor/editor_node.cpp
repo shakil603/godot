@@ -62,6 +62,7 @@
 #include "editor/docks/filesystem_dock.h"
 #include "editor/docks/groups_dock.h"
 #include "editor/docks/history_dock.h"
+#include "editor/game_master/game_master_dock.h"
 #include "editor/docks/import_dock.h"
 #include "editor/docks/inspector_dock.h"
 #include "editor/docks/scene_tree_dock.h"
@@ -9316,6 +9317,11 @@ EditorNode::EditorNode() {
 
 	history_dock = memnew(HistoryDock);
 	editor_dock_manager->add_dock(history_dock);
+
+	// Game Master AI agent chat dock (this fork's core feature). Registered after the stock docks so it is
+	// visible by default in the right-bottom slot next to the Inspector without disturbing existing layouts.
+	game_master_dock = memnew(GameMasterDock);
+	editor_dock_manager->add_dock(game_master_dock);
 
 	// Add some offsets to make LEFT_R and RIGHT_L docks wider than minsize.
 	const int dock_hsize = 280;
