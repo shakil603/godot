@@ -1,16 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Game Master">
-<polygon points="512.00,30.72 632.32,303.60 928.80,271.36 752.64,512.00 928.80,752.64 632.32,720.40 512.00,993.28 391.68,720.40 95.20,752.64 271.36,512.00 95.20,271.36 391.68,303.60" fill="#c9a24a" stroke="#8a6f2e" stroke-width="14.34" stroke-linejoin="round"/>
-<circle cx="512.00" cy="30.72" r="53.25" fill="#c9a24a"/>
-<circle cx="928.80" cy="271.36" r="53.25" fill="#c9a24a"/>
-<circle cx="928.80" cy="752.64" r="53.25" fill="#c9a24a"/>
-<circle cx="512.00" cy="993.28" r="53.25" fill="#c9a24a"/>
-<circle cx="95.20" cy="752.64" r="53.25" fill="#c9a24a"/>
-<circle cx="95.20" cy="271.36" r="53.25" fill="#c9a24a"/>
-<rect x="276.48" y="419.84" width="471.04" height="215.04" rx="96.77" fill="#171921"/>
-<rect x="356.35" y="478.21" width="28.67" height="98.30" rx="8.60" fill="#c9a24a"/>
-<rect x="321.54" y="513.02" width="98.30" height="28.67" rx="8.60" fill="#c9a24a"/>
-<circle cx="592.08" cy="480.67" r="28.67" fill="#c9a24a"/>
-<circle cx="685.47" cy="480.67" r="28.67" fill="#c9a24a"/>
-<circle cx="592.08" cy="574.05" r="28.67" fill="#c9a24a"/>
-<circle cx="685.47" cy="574.05" r="28.67" fill="#c9a24a"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" aria-label="Game Master" viewBox="0 0 1024 1024"><path fill="#c9a24a" stroke="#8a6f2e" stroke-linejoin="round" stroke-width="14.34" d="M512 30.72 632.32 303.6 928.8 271.36 752.64 512 928.8 752.64 632.32 720.4 512 993.28 391.68 720.4 95.2 752.64 271.36 512 95.2 271.36 391.68 303.6z"/><circle cx="512" cy="30.72" r="53.25" fill="#c9a24a"/><circle cx="928.8" cy="271.36" r="53.25" fill="#c9a24a"/><circle cx="928.8" cy="752.64" r="53.25" fill="#c9a24a"/><circle cx="512" cy="993.28" r="53.25" fill="#c9a24a"/><circle cx="95.2" cy="752.64" r="53.25" fill="#c9a24a"/><circle cx="95.2" cy="271.36" r="53.25" fill="#c9a24a"/><rect width="471.04" height="215.04" x="276.48" y="419.84" fill="#171921" rx="96.77"/><rect width="28.67" height="98.3" x="356.35" y="478.21" fill="#c9a24a" rx="8.6"/><rect width="98.3" height="28.67" x="321.54" y="513.02" fill="#c9a24a" rx="8.6"/><circle cx="592.08" cy="480.67" r="28.67" fill="#c9a24a"/><circle cx="685.47" cy="480.67" r="28.67" fill="#c9a24a"/><circle cx="592.08" cy="574.05" r="28.67" fill="#c9a24a"/><circle cx="685.47" cy="574.05" r="28.67" fill="#c9a24a"/></svg>

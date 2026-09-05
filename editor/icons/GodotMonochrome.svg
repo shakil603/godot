@@ -1,3 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" role="img" aria-label="Game Master">
-<polygon points="8.00,0.48 9.88,4.74 14.51,4.24 11.76,8.00 14.51,11.76 9.88,11.26 8.00,15.52 6.12,11.26 1.49,11.76 4.24,8.00 1.49,4.24 6.12,4.74" fill="#ffffff" stroke="none" stroke-width="0.00" stroke-linejoin="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" aria-label="Game Master" viewBox="0 0 16 16"><path fill="#fff" d="M8 .48 9.88 4.74 14.51 4.24 11.76 8 14.51 11.76 9.88 11.26 8 15.52 6.12 11.26 1.49 11.76 4.24 8 1.49 4.24 6.12 4.74z"/></svg>

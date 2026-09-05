@@ -1,16 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" role="img" aria-label="Game Master">
-<polygon points="8.00,0.48 9.88,4.74 14.51,4.24 11.76,8.00 14.51,11.76 9.88,11.26 8.00,15.52 6.12,11.26 1.49,11.76 4.24,8.00 1.49,4.24 6.12,4.74" fill="#c9a24a" stroke="#8a6f2e" stroke-width="0.22" stroke-linejoin="round"/>
-<circle cx="8.00" cy="0.48" r="0.83" fill="#c9a24a"/>
-<circle cx="14.51" cy="4.24" r="0.83" fill="#c9a24a"/>
-<circle cx="14.51" cy="11.76" r="0.83" fill="#c9a24a"/>
-<circle cx="8.00" cy="15.52" r="0.83" fill="#c9a24a"/>
-<circle cx="1.49" cy="11.76" r="0.83" fill="#c9a24a"/>
-<circle cx="1.49" cy="4.24" r="0.83" fill="#c9a24a"/>
-<rect x="4.32" y="6.56" width="7.36" height="3.36" rx="1.51" fill="#171921"/>
-<rect x="5.57" y="7.47" width="0.45" height="1.54" rx="0.13" fill="#c9a24a"/>
-<rect x="5.02" y="8.02" width="1.54" height="0.45" rx="0.13" fill="#c9a24a"/>
-<circle cx="9.25" cy="7.51" r="0.45" fill="#c9a24a"/>
-<circle cx="10.71" cy="7.51" r="0.45" fill="#c9a24a"/>
-<circle cx="9.25" cy="8.97" r="0.45" fill="#c9a24a"/>
-<circle cx="10.71" cy="8.97" r="0.45" fill="#c9a24a"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" aria-label="Game Master" viewBox="0 0 16 16"><path fill="#c9a24a" stroke="#8a6f2e" stroke-linejoin="round" stroke-width=".22" d="M8 .48 9.88 4.74 14.51 4.24 11.76 8 14.51 11.76 9.88 11.26 8 15.52 6.12 11.26 1.49 11.76 4.24 8 1.49 4.24 6.12 4.74z"/><circle cx="8" cy=".48" r=".83" fill="#c9a24a"/><circle cx="14.51" cy="4.24" r=".83" fill="#c9a24a"/><circle cx="14.51" cy="11.76" r=".83" fill="#c9a24a"/><circle cx="8" cy="15.52" r=".83" fill="#c9a24a"/><circle cx="1.49" cy="11.76" r=".83" fill="#c9a24a"/><circle cx="1.49" cy="4.24" r=".83" fill="#c9a24a"/><rect width="7.36" height="3.36" x="4.32" y="6.56" fill="#171921" rx="1.51"/><rect width=".45" height="1.54" x="5.57" y="7.47" fill="#c9a24a" rx=".13"/><rect width="1.54" height=".45" x="5.02" y="8.02" fill="#c9a24a" rx=".13"/><circle cx="9.25" cy="7.51" r=".45" fill="#c9a24a"/><circle cx="10.71" cy="7.51" r=".45" fill="#c9a24a"/><circle cx="9.25" cy="8.97" r=".45" fill="#c9a24a"/><circle cx="10.71" cy="8.97" r=".45" fill="#c9a24a"/></svg>

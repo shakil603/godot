@@ -3,14 +3,17 @@
 
 Replaces the leftover Godot robot / GODOT wordmark in editor icons, dist logos,
 default project icons, Windows/macOS containers and Android splash/mipmaps.
+
+After regenerating, minify the vectors so the svgo static check stays green:
+    npx svgo --config misc/utility/svgo.config.mjs <file.svg>
 """
+
 from __future__ import annotations
 
 import math
-import shutil
-import struct
 import sys
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 GOLD = "#c9a24a"
@@ -22,57 +25,80 @@ PLATE_EDGE = "#12141c"
 
 # Stencil letters in a unit square (y down). Width is the advance.
 # Each glyph is a list of (kind, ...) where kind is "rect" or "poly".
-_LETTERS: dict[str, tuple[float, list]] = {
-    "A": (0.82, [
-        ("poly", [(0.00, 1.00), (0.20, 1.00), (0.41, 0.00), (0.23, 0.00)]),
-        ("poly", [(0.59, 0.00), (0.77, 0.00), (0.98, 1.00), (0.78, 1.00)]),
-        ("rect", 0.22, 0.58, 0.38, 0.16),
-    ]),
-    "E": (0.70, [
-        ("rect", 0.00, 0.00, 0.20, 1.00),
-        ("rect", 0.18, 0.00, 0.52, 0.16),
-        ("rect", 0.18, 0.42, 0.42, 0.16),
-        ("rect", 0.18, 0.84, 0.52, 0.16),
-    ]),
-    "G": (0.80, [
-        ("rect", 0.18, 0.00, 0.58, 0.16),
-        ("rect", 0.00, 0.14, 0.20, 0.72),
-        ("rect", 0.18, 0.84, 0.58, 0.16),
-        ("rect", 0.78, 0.48, 0.20, 0.52),
-        ("rect", 0.46, 0.44, 0.52, 0.16),
-    ]),
-    "M": (0.96, [
-        ("rect", 0.00, 0.00, 0.18, 1.00),
-        ("rect", 0.78, 0.00, 0.18, 1.00),
-        ("poly", [(0.16, 0.00), (0.34, 0.00), (0.48, 0.52), (0.30, 0.52)]),
-        ("poly", [(0.80, 0.00), (0.62, 0.00), (0.48, 0.52), (0.66, 0.52)]),
-    ]),
-    "R": (0.78, [
-        ("rect", 0.00, 0.00, 0.20, 1.00),
-        ("rect", 0.18, 0.00, 0.42, 0.16),
-        ("rect", 0.52, 0.14, 0.20, 0.36),
-        ("rect", 0.18, 0.42, 0.42, 0.16),
-        ("poly", [(0.40, 0.56), (0.58, 0.56), (0.86, 1.00), (0.64, 1.00)]),
-    ]),
-    "S": (0.72, [
-        ("rect", 0.16, 0.00, 0.52, 0.16),
-        ("rect", 0.00, 0.14, 0.20, 0.36),
-        ("rect", 0.16, 0.42, 0.40, 0.16),
-        ("rect", 0.52, 0.50, 0.20, 0.36),
-        ("rect", 0.04, 0.84, 0.52, 0.16),
-    ]),
-    "T": (0.72, [
-        ("rect", 0.00, 0.00, 0.72, 0.16),
-        ("rect", 0.26, 0.14, 0.20, 0.86),
-    ]),
+_LETTERS: dict[str, tuple[float, list[Any]]] = {
+    "A": (
+        0.82,
+        [
+            ("poly", [(0.00, 1.00), (0.20, 1.00), (0.41, 0.00), (0.23, 0.00)]),
+            ("poly", [(0.59, 0.00), (0.77, 0.00), (0.98, 1.00), (0.78, 1.00)]),
+            ("rect", 0.22, 0.58, 0.38, 0.16),
+        ],
+    ),
+    "E": (
+        0.70,
+        [
+            ("rect", 0.00, 0.00, 0.20, 1.00),
+            ("rect", 0.18, 0.00, 0.52, 0.16),
+            ("rect", 0.18, 0.42, 0.42, 0.16),
+            ("rect", 0.18, 0.84, 0.52, 0.16),
+        ],
+    ),
+    "G": (
+        0.80,
+        [
+            ("rect", 0.18, 0.00, 0.58, 0.16),
+            ("rect", 0.00, 0.14, 0.20, 0.72),
+            ("rect", 0.18, 0.84, 0.58, 0.16),
+            ("rect", 0.78, 0.48, 0.20, 0.52),
+            ("rect", 0.46, 0.44, 0.52, 0.16),
+        ],
+    ),
+    "M": (
+        0.96,
+        [
+            ("rect", 0.00, 0.00, 0.18, 1.00),
+            ("rect", 0.78, 0.00, 0.18, 1.00),
+            ("poly", [(0.16, 0.00), (0.34, 0.00), (0.48, 0.52), (0.30, 0.52)]),
+            ("poly", [(0.80, 0.00), (0.62, 0.00), (0.48, 0.52), (0.66, 0.52)]),
+        ],
+    ),
+    "R": (
+        0.78,
+        [
+            ("rect", 0.00, 0.00, 0.20, 1.00),
+            ("rect", 0.18, 0.00, 0.42, 0.16),
+            ("rect", 0.52, 0.14, 0.20, 0.36),
+            ("rect", 0.18, 0.42, 0.42, 0.16),
+            ("poly", [(0.40, 0.56), (0.58, 0.56), (0.86, 1.00), (0.64, 1.00)]),
+        ],
+    ),
+    "S": (
+        0.72,
+        [
+            ("rect", 0.16, 0.00, 0.52, 0.16),
+            ("rect", 0.00, 0.14, 0.20, 0.36),
+            ("rect", 0.16, 0.42, 0.40, 0.16),
+            ("rect", 0.52, 0.50, 0.20, 0.36),
+            ("rect", 0.04, 0.84, 0.52, 0.16),
+        ],
+    ),
+    "T": (
+        0.72,
+        [
+            ("rect", 0.00, 0.00, 0.72, 0.16),
+            ("rect", 0.26, 0.14, 0.20, 0.86),
+        ],
+    ),
     " ": (0.32, []),
 }
 
 
-def _star_inner(v: float = 64.0, gold: str = GOLD, gold_dark: str = GOLD_DARK, ink: str = INK, mono: bool = False) -> str:
+def _star_inner(
+    v: float = 64.0, gold: str = GOLD, gold_dark: str = GOLD_DARK, ink: str = INK, mono: bool = False
+) -> str:
     cx = cy = v / 2.0
     outer, inner, tip = v * 0.47, v * 0.235, v * 0.052
-    pts = []
+    pts: list[str] = []
     for i in range(12):
         angle = math.pi / 6 * i - math.pi / 2
         radius = outer if i % 2 == 0 else inner
@@ -91,11 +117,17 @@ def _star_inner(v: float = 64.0, gold: str = GOLD, gold_dark: str = GOLD_DARK, i
         pad_w, pad_h = v * 0.46, v * 0.21
         stick, half, button = v * 0.048, v * 0.014, v * 0.028
         pad_x, pad_y = cx - pad_w / 2.0, cy + v * 0.015 - pad_h / 2.0
-        parts.append(f'<rect x="{pad_x:.2f}" y="{pad_y:.2f}" width="{pad_w:.2f}" height="{pad_h:.2f}" rx="{pad_h * 0.45:.2f}" fill="{ink}"/>')
+        parts.append(
+            f'<rect x="{pad_x:.2f}" y="{pad_y:.2f}" width="{pad_w:.2f}" height="{pad_h:.2f}" rx="{pad_h * 0.45:.2f}" fill="{ink}"/>'
+        )
         dpad_x = cx - pad_w * 0.30
         dpad_y = pad_y + pad_h * 0.5
-        parts.append(f'<rect x="{dpad_x - half:.2f}" y="{dpad_y - stick:.2f}" width="{half * 2:.2f}" height="{stick * 2:.2f}" rx="{half * 0.6:.2f}" fill="{gold}"/>')
-        parts.append(f'<rect x="{dpad_x - stick:.2f}" y="{dpad_y - half:.2f}" width="{stick * 2:.2f}" height="{half * 2:.2f}" rx="{half * 0.6:.2f}" fill="{gold}"/>')
+        parts.append(
+            f'<rect x="{dpad_x - half:.2f}" y="{dpad_y - stick:.2f}" width="{half * 2:.2f}" height="{stick * 2:.2f}" rx="{half * 0.6:.2f}" fill="{gold}"/>'
+        )
+        parts.append(
+            f'<rect x="{dpad_x - stick:.2f}" y="{dpad_y - half:.2f}" width="{stick * 2:.2f}" height="{half * 2:.2f}" rx="{half * 0.6:.2f}" fill="{gold}"/>'
+        )
         for row in range(2):
             for col in range(2):
                 bx = cx + pad_w * 0.17 + col * stick * 1.9
@@ -104,13 +136,13 @@ def _star_inner(v: float = 64.0, gold: str = GOLD, gold_dark: str = GOLD_DARK, i
     return "\n".join(parts)
 
 
-def _star_group(x: float, y: float, size: float, **kwargs) -> str:
+def _star_group(x: float, y: float, size: float, **kwargs: Any) -> str:
     scale = size / 64.0
     return f'<g transform="translate({x:.2f} {y:.2f}) scale({scale:.5f})">\n{_star_inner(64.0, **kwargs)}\n</g>'
 
 
 def _wordmark(text: str, x: float, y: float, h: float, fill: str, tracking: float = 0.14) -> tuple[str, float]:
-    parts = []
+    parts: list[str] = []
     cursor = x
     for ch in text.upper():
         width, glyphs = _LETTERS.get(ch, (0.32, []))
@@ -176,7 +208,8 @@ def file_icon() -> str:
     body = (
         '<path fill="#2a2d3a" d="M14 5a4 4 0 0 0-4 4v46a4 4 0 0 0 4 4h36a4 4 0 0 0 4-4V22a1 1 0 0 0-.285-.707l-16-16A1 1 0 0 0 37 5z"/>'
         f'<path fill="{PLATE}" d="M14 7h22v12a4 4 0 0 0 4 4h12v32a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"/>'
-        + "\n" + _star_group(18, 26, 28)
+        + "\n"
+        + _star_group(18, 26, 28)
     )
     return _svg(64, 64, body, "Game Master project file")
 
@@ -196,7 +229,8 @@ def outlined_icon() -> str:
 
 def write(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="utf-8", newline="\n")
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(text)
     print(f"wrote {path.relative_to(ROOT)} ({path.stat().st_size} bytes)")
 
 
@@ -214,9 +248,14 @@ def main() -> int:
     write(ROOT / "misc/logo/game_master_icon.svg", _svg(512, 512, _star_inner(64), "Game Master"))
     write(ROOT / "misc/dist/html/logo.svg", logo_lockup(640, 160, subtitle=False))
     write(ROOT / "misc/dist/windows/icon_console.svg", console_icon())
-    write(ROOT / "misc/brand/linux/hicolor/scalable/apps/game-master.svg", _svg(512, 512, _star_inner(64), "Game Master"))
+    write(
+        ROOT / "misc/brand/linux/hicolor/scalable/apps/game-master.svg", _svg(512, 512, _star_inner(64), "Game Master")
+    )
     write(ROOT / "platform/android/java/app/src/instrumented/assets/icon.svg", default_project_icon())
-    write(ROOT / "misc/logo/LICENSE.txt", "Game Master brand artwork\nCopyright (c) Game Master\n\nOriginal mark for this fork. Not the Godot Engine logo.\n")
+    write(
+        ROOT / "misc/logo/LICENSE.txt",
+        "Game Master brand artwork\nCopyright (c) Game Master\n\nOriginal mark for this fork. Not the Godot Engine logo.\n",
+    )
     return 0
 
 
