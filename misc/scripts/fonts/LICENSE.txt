@@ -1,9 +1,8 @@
-The fonts in this directory are used only by game_master_assets.py to bake the
-author credit into main/splash.png. Both are released under the SIL Open Font
+The font in this directory is used only by game_master_assets.py to render the
+author credit on main/splash.png. It is released under the SIL Open Font
 License 1.1 (https://openfontlicense.org):
 
-  Rye-Regular.ttf            - Rye (Sorkin Type)
-  NotoSansBengali-Bold.ttf   - Noto Sans Bengali (Google/monotype)
+  Rye-Regular.ttf - Rye (Sorkin Type)
 
-Keep the files together with the script: the credit splash is regenerated from
-them and cannot be rebuilt without them.
+Keep the file together with the script: the credit splash is rendered from it
+and cannot be rebuilt without it.

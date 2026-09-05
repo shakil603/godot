@@ -17,10 +17,9 @@ Usage:
 
 `--check` and `--svg-only` need no third-party modules. Regeneration requires:
     pip install pillow numpy
-The author credit on main/splash.png (name + one line) additionally needs:
-    pip install uharfbuzz fonttools
-and the fonts in misc/scripts/fonts/ (see the LICENSE note there). Without them
-the splash falls back to the plain badge.
+The author credit on main/splash.png (name + one line) is rendered from the
+display font kept in misc/scripts/fonts/ (see the LICENSE note there); without
+it the splash falls back to the plain badge.
 """
 
 from __future__ import annotations
@@ -42,10 +41,9 @@ COLOR_GOLD = (201, 162, 74, 255)
 
 # Author credit baked into main/splash.png (the boot splash banner).
 AUTHOR_NAME = "SHAKIL"
-AUTHOR_LINE = "আমি একজন ডেভলপার আর মালিক"  # "I am a developer and owner"
+AUTHOR_LINE = "I AM A DEVELOPER AND OWNER"
 FONT_DIR = ROOT / "misc/scripts/fonts"
-FONT_DISPLAY = FONT_DIR / "Rye-Regular.ttf"          # western display face, matches the badge lettering
-FONT_BENGALI = FONT_DIR / "NotoSansBengali-Bold.ttf"
+FONT_DISPLAY = FONT_DIR / "Rye-Regular.ttf"  # western display face, matches the badge lettering
 COLOR_INK = (10, 11, 15, 255)
 COLOR_GOLD_BRIGHT = (222, 184, 98, 255)
 COLOR_WHITE = (242, 239, 233, 255)
@@ -411,132 +409,35 @@ def _hex_to_rgba(value: str) -> tuple:
     return (int(value[1:3], 16), int(value[3:5], 16), int(value[5:7], 16), 255)
 
 
-def _flatten_q(points: list, steps: int = 10) -> list:
-    """Flatten one TrueType qCurveTo: points = [start, c1, on1, c2, on2, ...]."""
-    out: list[tuple[float, float]] = []
-    cur = points[0]
-    i = 1
-    n = len(points)
-    while i < n:
-        if i + 1 < n:  # off-curve followed by on-curve
-            ctrl, end = points[i], points[i + 1]
-            i += 2
-        else:  # trailing off-curve on a closed contour: midpoint is the endpoint
-            ctrl, end = points[i], points[0]
-            i += 1
-        for s in range(1, steps + 1):
-            t = s / steps
-            a = (1 - t) ** 2
-            b = 2 * (1 - t) * t
-            c = t * t
-            out.append((a * cur[0] + b * ctrl[0] + c * end[0],
-                        a * cur[1] + b * ctrl[1] + c * end[1]))
-        cur = end
-    return out
-
-
-def _glyph_contours(tt, gid: int) -> list:
-    """Closed contours (lists of (x, y) in font units, y up) for a glyph id.
-
-    Composite glyphs (like Bengali "ra" = ba + nukta) must be expanded by hand:
-    fontTools hands `addComponent` to the pen, and only a pen that resolves it can
-    see the component outlines.
-    """
-    if gid == 0:
-        return []
-    from fontTools.pens.recordingPen import RecordingPen
-    from fontTools.pens.transformPen import TransformPen
-
-    gset = tt.getGlyphSet()
-
-    class ExpandingPen(RecordingPen):
-        def addComponent(self, glyph_name, transform):
-            gset[glyph_name].draw(TransformPen(self, transform))
-
-    name = tt.getGlyphName(gid)
-    pen = ExpandingPen()
-    gset[name].draw(pen)
-    contours: list[list] = []
-    cur: list = []
-    for op, args in pen.value:
-        if op == "moveTo":
-            if len(cur) > 1:
-                contours.append(cur)
-            cur = [tuple(args[0])]
-        elif op == "lineTo":
-            cur.append(tuple(args[0]))
-        elif op == "qCurveTo":
-            cur.extend(_flatten_q([cur[-1]] + [tuple(p) for p in args], steps=8))
-        elif op in ("closePath", "endPath"):
-            if len(cur) > 1:
-                contours.append(cur)
-            cur = []
-    if len(cur) > 1:
-        contours.append(cur)
-    return contours
-
-
 def _fonts_available() -> bool:
-    try:
-        import uharfbuzz  # noqa: F401
-        import fontTools  # noqa: F401
-    except ImportError:
-        return False
-    return FONT_DISPLAY.is_file() and FONT_BENGALI.is_file()
+    """The display font ships with the tree; without it the credit line can't be drawn."""
+    return FONT_DISPLAY.is_file()
 
 
-def shaped_text_mask(font_path: Path, text: str, size: float, ss: int = 4):
-    """Render `text` at `size` px with full Unicode shaping (HarfBuzz).
+def text_mask(font_path: Path, text: str, size: float) -> "Image":
+    """Ink mask of `text` at `size` px, cropped to the ink.
 
-    Returns (mask, bbox): an "L" image at 1x scale and the ink bounds relative to the
-    pen origin (y down). Bengali and other complex scripts need the shaping pass; plain
-    PIL text rendering mangles them.
+    The credit is plain Latin in a single display font, so a straight Pillow
+    render is exact - no shaping engine needed.
     """
-    import uharfbuzz as hb
-    from fontTools.ttLib import TTFont
-    from PIL import Image, ImageChops, ImageDraw
+    _, Image = _pillow()
+    from PIL import ImageDraw, ImageFont
 
-    face = hb.Face(hb.Blob(font_path.read_bytes()))
-    font = hb.Font(face)
-    buf = hb.Buffer()
-    buf.add_str(text)
-    buf.guess_segment_properties()
-    hb.shape(font, buf)
-
-    tt = TTFont(str(font_path))
-    scale = (size / tt["head"].unitsPerEm) * ss
-    pen_x = 0.0
-    all_polys: list[list[tuple[float, float]]] = []
-    for g, p in zip(buf.glyph_infos, buf.glyph_positions):
-        for contour in _glyph_contours(tt, g.codepoint):
-            tx = pen_x + p.x_offset * scale
-            ty = -p.y_offset * scale
-            all_polys.append([(x * scale + tx, -y * scale + ty) for x, y in contour])
-        pen_x += p.x_advance * scale
-
-    if not all_polys:
-        empty = Image.new("L", (1, 1), 0)
-        return empty, (0.0, 0.0, 1.0, 1.0)
-
-    xs = [pt[0] for poly in all_polys for pt in poly]
-    ys = [pt[1] for poly in all_polys for pt in poly]
-    x0, y0, x1, y1 = min(xs), min(ys), max(xs), max(ys)
-    w = int(math.ceil(x1 - x0)) + 2 * ss
-    h = int(math.ceil(y1 - y0)) + 2 * ss
-    big = Image.new("1", (w, h), 0)
-    for poly in all_polys:
-        tmp = Image.new("1", (w, h), 0)
-        # Even-odd fill: XOR every closed contour (holes stay hollow).
-        ImageDraw.Draw(tmp).polygon([(x - x0 + ss, y - y0 + ss) for x, y in poly], fill=1)
-        big = ImageChops.logical_xor(big, tmp)
-    mask = big.convert("L").resize((max(1, w // ss), max(1, h // ss)), Image.LANCZOS)
-    bbox = ((x0 - ss) / ss, (y0 - ss) / ss, (x1 + ss) / ss, (y1 + ss) / ss)
-    return mask, bbox
+    font = ImageFont.truetype(str(font_path), int(round(size)))
+    left, top, right, bottom = ImageDraw.Draw(Image.new("L", (8, 8))).textbbox((0, 0), text, font=font)
+    width, height = max(1, right - left + 8), max(1, bottom - top + 8)
+    mask = Image.new("L", (width, height), 0)
+    ImageDraw.Draw(mask).text((4 - left, 4 - top), text, font=font, fill=255)
+    return mask
 
 
 def credit_splash(badge, size: int = 1024):
     """The boot splash banner: the badge on top, a black-and-gold ribbon below carrying
-    the author's name (SHAKIL) and the line "I am a developer and owner" in Bengali."""
+    the author's name (SHAKIL) and the line "I AM A DEVELOPER AND OWNER".
+
+    Both lines use the same western display font as the badge lettering so the
+    banner stays in the brand voice - no other script is drawn on it.
+    """
     _, Image = _pillow()
     from PIL import ImageDraw
 
@@ -553,15 +454,23 @@ def credit_splash(badge, size: int = 1024):
     draw.rounded_rectangle((rx0, ry0, rx0 + ribbon_w, ry0 + ribbon_h), radius=30,
                            fill=COLOR_INK, outline=COLOR_GOLD, width=5)
 
-    name_mask, _ = shaped_text_mask(FONT_DISPLAY, AUTHOR_NAME, 84)
-    name_layer = Image.new("RGBA", name_mask.size, COLOR_GOLD_BRIGHT)
-    name_layer.putalpha(name_mask)
-    canvas.alpha_composite(name_layer, ((size - name_mask.width) // 2, ry0 + 40))
+    def put_line(mask: "Image", fill, x: int, y: int) -> None:
+        layer = Image.new("RGBA", mask.size, fill)
+        layer.putalpha(mask)
+        canvas.alpha_composite(layer, (x, y))
 
-    line_mask, _ = shaped_text_mask(FONT_BENGALI, AUTHOR_LINE, 42)
-    line_layer = Image.new("RGBA", line_mask.size, COLOR_WHITE)
-    line_layer.putalpha(line_mask)
-    canvas.alpha_composite(line_layer, ((size - line_mask.width) // 2, ry0 + ribbon_h - line_mask.height - 44))
+    name_mask = text_mask(FONT_DISPLAY, AUTHOR_NAME, 84)
+    put_line(name_mask, COLOR_GOLD_BRIGHT, (size - name_mask.width) // 2, ry0 + 42)
+
+    # Fit the tagline into the ribbon without resizing after the fact.
+    max_w = ribbon_w - 100
+    line_size = 40.0
+    line_mask = text_mask(FONT_DISPLAY, AUTHOR_LINE, line_size)
+    if line_mask.width > max_w:
+        line_size *= max_w / line_mask.width
+        line_mask = text_mask(FONT_DISPLAY, AUTHOR_LINE, line_size)
+    put_line(line_mask, COLOR_WHITE, (size - line_mask.width) // 2,
+             ry0 + ribbon_h - line_mask.height - 46)
     return canvas
 
 
@@ -658,7 +567,7 @@ def generate(threshold: int) -> int:
     if _fonts_available():
         emit(credit_splash(badge), "main/splash.png")
     else:
-        print("warning: uharfbuzz/fonttools or the fonts in misc/scripts/fonts/ are missing; "
+        print("warning: the display font in misc/scripts/fonts/ is missing; "
               "main/splash.png is written without the author credit")
         emit(square(badge, ENGINE_ASSETS["main/splash.png"], margin=0.10), "main/splash.png")
     emit(wide_logo(badge, wordmark, ENGINE_ASSETS["main/splash_editor.png"]), "main/splash_editor.png")
