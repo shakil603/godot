@@ -123,6 +123,28 @@ def check_assets() -> int:
     if html_logo.is_file() and b"godot" in html_logo.read_bytes().lower():
         failures.append("misc/dist/html/logo.svg: Web export still shows the previous brand")
 
+    godot_blue = b"478cbf"
+    branded = (
+        "editor/icons/Logo.svg",
+        "editor/icons/TitleBarLogo.svg",
+        "editor/icons/Godot.svg",
+        "editor/icons/GodotFile.svg",
+        "editor/icons/GodotMonochrome.svg",
+        "editor/icons/DefaultProjectIcon.svg",
+        "misc/logo/logo.svg",
+        "misc/logo/icon.svg",
+        "misc/dist/html/logo.svg",
+        "misc/dist/windows/icon_console.svg",
+    )
+    for rel in branded:
+        path = ROOT / rel
+        if not path.is_file():
+            failures.append(f"{rel}: missing Game Master mark")
+            continue
+        data = path.read_bytes()
+        if godot_blue in data or b"GODOT" in data:
+            failures.append(f"{rel}: still contains the previous engine's robot or wordmark")
+
     if failures:
         print("Game Master brand assets: FAILED")
         for line in failures:
@@ -512,6 +534,9 @@ def generate(threshold: int) -> int:
     emit(wide_logo(badge, wordmark), "misc/brand/splash/boot_splash_wide.png")
 
     print(f"Generated {len(written)} files from {SOURCE.relative_to(ROOT)} (badge cut out at {badge.width}x{badge.height}).")
+    import subprocess
+
+    subprocess.check_call([sys.executable, str(ROOT / "misc/scripts/_write_editor_brand.py")])
     preview()  # keep the size-check sheet in step with the assets
     return 0
 
@@ -615,12 +640,16 @@ def main() -> int:
             print(rel)
         return 0
     if args.svg_only:
+        import subprocess
+
         svg = icon_svg(64)
         for rel in ("misc/logo/game_master_icon.svg", "misc/dist/html/logo.svg"):
             path = ROOT / rel
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(svg, encoding="utf-8", newline="\n")
             print(f"wrote {path.relative_to(ROOT)}")
+        writer = ROOT / "misc/scripts/_write_editor_brand.py"
+        subprocess.check_call([sys.executable, str(writer)])
         return 0
     if args.preview:
         return preview()
