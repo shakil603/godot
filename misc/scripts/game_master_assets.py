@@ -386,37 +386,63 @@ def icon_geometry(v: float) -> dict[str, Any]:
     }
 
 
+def _svg_num(value: float) -> str:
+    """Format a number exactly as the repository's svgo hook emits it (precision 2, no trailing
+    or leading zeros), so regenerated SVGs survive the hook byte for byte."""
+    rounded = round(value, 2)
+    if rounded == int(rounded):
+        return str(int(rounded))
+    text = f"{rounded:.2f}".rstrip("0").rstrip(".")
+    return text[1:] if text.startswith("0.") else text
+
+
+def _star_path(star) -> str:
+    """The star as one closed path: svgo converts <polygon> to this implicit-lineto form."""
+    return "M" + " ".join(f"{_svg_num(x)} {_svg_num(y)}" for x, y in star) + "z"
+
+
+def _icon_elements(g: dict[str, Any], off: float = 0.0) -> list[str]:
+    """Badge + D-pad as svgo-canonical elements (sorted attributes, minimal numbers)."""
+
+    def circle(x: float, y: float, r: float) -> str:
+        return f'<circle cx="{_svg_num(x + off)}" cy="{_svg_num(y + off)}" r="{_svg_num(r)}" fill="{g["gold"]}"/>'
+
+    def rect(x: float, y: float, w: float, h: float, fill: str, rx: float) -> str:
+        return (
+            f'<rect width="{_svg_num(w)}" height="{_svg_num(h)}" x="{_svg_num(x + off)}" '
+            f'y="{_svg_num(y + off)}" fill="{fill}" rx="{_svg_num(rx)}"/>'
+        )
+
+    elements = [
+        f'<path fill="{g["gold"]}" stroke="{g["gold_dark"]}" stroke-linejoin="round" '
+        f'stroke-width="{_svg_num(g["stroke"])}" d="{_star_path([(x + off, y + off) for x, y in g["star"]])}"/>',
+    ]
+    elements += [circle(x, y, r) for x, y, r in g["tips"]]
+    pad_x, pad_y, pad_w, pad_h, pad_r = g["pad"]
+    elements.append(rect(pad_x, pad_y, pad_w, pad_h, g["ink"], pad_r))
+    for (x, y, w, h), half in zip(g["dpad"], (g["dpad"][0][2] * 0.3, g["dpad"][1][3] * 0.3)):
+        elements.append(rect(x, y, w, h, g["gold"], half))
+    elements += [circle(x, y, r) for x, y, r in g["buttons"]]
+    return elements
+
+
 def icon_svg(size: int = 64, intrinsic: int = 512) -> str:
     """Vector form of the small-size icon.
 
     `intrinsic` is larger than the viewBox on purpose: the Web editor shell sizes its logo with
-    `width: auto`, so an intrinsic 64px would render a postage stamp on a big canvas.
+    `width: auto`, so an intrinsic 64px would render a postage stamp on a big canvas. The output
+    is the svgo-canonical form (single line, attribute order and number format of the svgo
+    pre-commit hook), so regenerated files match the hook byte for byte.
     """
     g = icon_geometry(float(size))
     v = float(size)
-
-    def points(items):
-        return " ".join(f"{x:.2f},{y:.2f}" for x, y in items)
-
-    parts = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{intrinsic}" height="{intrinsic}" viewBox="0 0 {v:g} {v:g}" '
-        f'role="img" aria-label="{BRAND_NAME} logo">',
-        f'  <polygon points="{points(g["star"])}" fill="{g["gold"]}" stroke="{g["gold_dark"]}" '
-        f'stroke-width="{g["stroke"]:.2f}" stroke-linejoin="round"/>',
+    elements = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{intrinsic}" height="{intrinsic}" '
+        f'aria-label="{BRAND_NAME} logo" viewBox="0 0 {_svg_num(v)} {_svg_num(v)}">',
+        *_icon_elements(g),
+        "</svg>",
     ]
-    parts += [f'  <circle cx="{x:.2f}" cy="{y:.2f}" r="{r:.2f}" fill="{g["gold"]}"/>' for x, y, r in g["tips"]]
-    pad_x, pad_y, pad_w, pad_h, pad_r = g["pad"]
-    parts.append(
-        f'  <rect x="{pad_x:.2f}" y="{pad_y:.2f}" width="{pad_w:.2f}" height="{pad_h:.2f}" '
-        f'rx="{pad_r:.2f}" fill="{g["ink"]}"/>'
-    )
-    parts += [
-        f'  <rect x="{x:.2f}" y="{y:.2f}" width="{w:g}" height="{h:.2f}" rx="{half:.2f}" fill="{g["gold"]}"/>'
-        for (x, y, w, h), half in zip(g["dpad"], (g["dpad"][0][2] * 0.3, g["dpad"][1][3] * 0.3))
-    ]
-    parts += [f'  <circle cx="{x:.2f}" cy="{y:.2f}" r="{r:.2f}" fill="{g["gold"]}"/>' for x, y, r in g["buttons"]]
-    parts.append("</svg>")
-    return "\n".join(parts) + "\n"
+    return "".join(elements) + "\n"
 
 
 def icon_raster(size: int, background=None, mono: bool = False):
@@ -520,37 +546,16 @@ def credit_splash(badge, size: int = 1024):
 
 def default_project_icon_svg() -> str:
     """The icon "New Project" writes into a fresh project: the brand mark on a warm-white
-    plate (the old layout of the Godot default project icon, rebranded)."""
+    plate (the old layout of the Godot default project icon, rebranded). Svgo-canonical form,
+    see icon_svg()."""
     g = icon_geometry(100.0)
-    off = 14.0
-
-    def pts(items):
-        return " ".join(f"{x + off:.2f},{y + off:.2f}" for x, y in items)
-
-    parts = [
+    elements = [
         '<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128">',
-        '  <rect width="124" height="124" x="2" y="2" fill="#f4f1ea" rx="14"/>',
-        f'  <polygon points="{pts(g["star"])}" fill="{g["gold"]}" stroke="{g["gold_dark"]}" '
-        f'stroke-width="{g["stroke"]:.2f}" stroke-linejoin="round"/>',
+        '<rect width="124" height="124" x="2" y="2" fill="#f4f1ea" rx="14"/>',
+        *_icon_elements(g, off=14.0),
+        "</svg>",
     ]
-    parts += [
-        f'  <circle cx="{x + off:.2f}" cy="{y + off:.2f}" r="{r:.2f}" fill="{g["gold"]}"/>' for x, y, r in g["tips"]
-    ]
-    pad_x, pad_y, pad_w, pad_h, pad_r = g["pad"]
-    parts.append(
-        f'  <rect x="{pad_x + off:.2f}" y="{pad_y + off:.2f}" width="{pad_w:.2f}" '
-        f'height="{pad_h:.2f}" rx="{pad_r:.2f}" fill="{g["ink"]}"/>'
-    )
-    for (x, y, w, h), half in zip(g["dpad"], (g["dpad"][0][2] * 0.3, g["dpad"][1][3] * 0.3)):
-        parts.append(
-            f'  <rect x="{x + off:.2f}" y="{y + off:.2f}" width="{w:g}" height="{h:.2f}" '
-            f'rx="{half:.2f}" fill="{g["gold"]}"/>'
-        )
-    parts += [
-        f'  <circle cx="{x + off:.2f}" cy="{y + off:.2f}" r="{r:.2f}" fill="{g["gold"]}"/>' for x, y, r in g["buttons"]
-    ]
-    parts.append("</svg>")
-    return "\n".join(parts) + "\n"
+    return "".join(elements) + "\n"
 
 
 def brand_mark(size: int, margin: float = 0.0, badge=None, detail: bool = True):

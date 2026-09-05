@@ -1,17 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128">
-  <rect width="124" height="124" x="2" y="2" fill="#f4f1ea" rx="14"/>
-  <polygon points="64.00,17.00 75.75,43.65 104.70,40.50 87.50,64.00 104.70,87.50 75.75,84.35 64.00,111.00 52.25,84.35 23.30,87.50 40.50,64.00 23.30,40.50 52.25,43.65" fill="#c9a24a" stroke="#8a6f2e" stroke-width="1.40" stroke-linejoin="round"/>
-  <circle cx="64.00" cy="17.00" r="5.20" fill="#c9a24a"/>
-  <circle cx="104.70" cy="40.50" r="5.20" fill="#c9a24a"/>
-  <circle cx="104.70" cy="87.50" r="5.20" fill="#c9a24a"/>
-  <circle cx="64.00" cy="111.00" r="5.20" fill="#c9a24a"/>
-  <circle cx="23.30" cy="87.50" r="5.20" fill="#c9a24a"/>
-  <circle cx="23.30" cy="40.50" r="5.20" fill="#c9a24a"/>
-  <rect x="41.00" y="55.00" width="46.00" height="21.00" rx="9.45" fill="#171921"/>
-  <rect x="48.80" y="60.70" width="2.8" height="9.60" rx="0.84" fill="#c9a24a"/>
-  <rect x="45.40" y="64.10" width="9.6" height="2.80" rx="0.84" fill="#c9a24a"/>
-  <circle cx="71.82" cy="60.94" r="2.80" fill="#c9a24a"/>
-  <circle cx="80.94" cy="60.94" r="2.80" fill="#c9a24a"/>
-  <circle cx="71.82" cy="70.06" r="2.80" fill="#c9a24a"/>
-  <circle cx="80.94" cy="70.06" r="2.80" fill="#c9a24a"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect width="124" height="124" x="2" y="2" fill="#f4f1ea" rx="14"/><path fill="#c9a24a" stroke="#8a6f2e" stroke-linejoin="round" stroke-width="1.4" d="M64 17 75.75 43.65 104.7 40.5 87.5 64 104.7 87.5 75.75 84.35 64 111 52.25 84.35 23.3 87.5 40.5 64 23.3 40.5 52.25 43.65z"/><circle cx="64" cy="17" r="5.2" fill="#c9a24a"/><circle cx="104.7" cy="40.5" r="5.2" fill="#c9a24a"/><circle cx="104.7" cy="87.5" r="5.2" fill="#c9a24a"/><circle cx="64" cy="111" r="5.2" fill="#c9a24a"/><circle cx="23.3" cy="87.5" r="5.2" fill="#c9a24a"/><circle cx="23.3" cy="40.5" r="5.2" fill="#c9a24a"/><rect width="46" height="21" x="41" y="55" fill="#171921" rx="9.45"/><rect width="2.8" height="9.6" x="48.8" y="60.7" fill="#c9a24a" rx=".84"/><rect width="9.6" height="2.8" x="45.4" y="64.1" fill="#c9a24a" rx=".84"/><circle cx="71.82" cy="60.94" r="2.8" fill="#c9a24a"/><circle cx="80.94" cy="60.94" r="2.8" fill="#c9a24a"/><circle cx="71.82" cy="70.06" r="2.8" fill="#c9a24a"/><circle cx="80.94" cy="70.06" r="2.8" fill="#c9a24a"/></svg>
