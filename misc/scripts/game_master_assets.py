@@ -17,6 +17,10 @@ Usage:
 
 `--check` and `--svg-only` need no third-party modules. Regeneration requires:
     pip install pillow numpy
+The author credit on main/splash.png (name + one line) additionally needs:
+    pip install uharfbuzz fonttools
+and the fonts in misc/scripts/fonts/ (see the LICENSE note there). Without them
+the splash falls back to the plain badge.
 """
 
 from __future__ import annotations
@@ -35,6 +39,16 @@ BRAND_NAME = "Game Master"
 # Sampled from the source artwork; keep the dark tone in sync with the splash background.
 COLOR_DARK = (24, 26, 35, 255)
 COLOR_GOLD = (201, 162, 74, 255)
+
+# Author credit baked into main/splash.png (the boot splash banner).
+AUTHOR_NAME = "SHAKIL"
+AUTHOR_LINE = "আমি একজন ডেভলপার আর মালিক"  # "I am a developer and owner"
+FONT_DIR = ROOT / "misc/scripts/fonts"
+FONT_DISPLAY = FONT_DIR / "Rye-Regular.ttf"          # western display face, matches the badge lettering
+FONT_BENGALI = FONT_DIR / "NotoSansBengali-Bold.ttf"
+COLOR_INK = (10, 11, 15, 255)
+COLOR_GOLD_BRIGHT = (222, 184, 98, 255)
+COLOR_WHITE = (242, 239, 233, 255)
 
 # Embedded into every binary by main/SCsub. Must be square power-of-two RGBA PNGs,
 # large enough for a 5x HiDPI display, because the boot splash scales per monitor.
@@ -397,6 +411,189 @@ def _hex_to_rgba(value: str) -> tuple:
     return (int(value[1:3], 16), int(value[3:5], 16), int(value[5:7], 16), 255)
 
 
+def _flatten_q(points: list, steps: int = 10) -> list:
+    """Flatten one TrueType qCurveTo: points = [start, c1, on1, c2, on2, ...]."""
+    out: list[tuple[float, float]] = []
+    cur = points[0]
+    i = 1
+    n = len(points)
+    while i < n:
+        if i + 1 < n:  # off-curve followed by on-curve
+            ctrl, end = points[i], points[i + 1]
+            i += 2
+        else:  # trailing off-curve on a closed contour: midpoint is the endpoint
+            ctrl, end = points[i], points[0]
+            i += 1
+        for s in range(1, steps + 1):
+            t = s / steps
+            a = (1 - t) ** 2
+            b = 2 * (1 - t) * t
+            c = t * t
+            out.append((a * cur[0] + b * ctrl[0] + c * end[0],
+                        a * cur[1] + b * ctrl[1] + c * end[1]))
+        cur = end
+    return out
+
+
+def _glyph_contours(tt, gid: int) -> list:
+    """Closed contours (lists of (x, y) in font units, y up) for a glyph id.
+
+    Composite glyphs (like Bengali "ra" = ba + nukta) must be expanded by hand:
+    fontTools hands `addComponent` to the pen, and only a pen that resolves it can
+    see the component outlines.
+    """
+    if gid == 0:
+        return []
+    from fontTools.pens.recordingPen import RecordingPen
+    from fontTools.pens.transformPen import TransformPen
+
+    gset = tt.getGlyphSet()
+
+    class ExpandingPen(RecordingPen):
+        def addComponent(self, glyph_name, transform):
+            gset[glyph_name].draw(TransformPen(self, transform))
+
+    name = tt.getGlyphName(gid)
+    pen = ExpandingPen()
+    gset[name].draw(pen)
+    contours: list[list] = []
+    cur: list = []
+    for op, args in pen.value:
+        if op == "moveTo":
+            if len(cur) > 1:
+                contours.append(cur)
+            cur = [tuple(args[0])]
+        elif op == "lineTo":
+            cur.append(tuple(args[0]))
+        elif op == "qCurveTo":
+            cur.extend(_flatten_q([cur[-1]] + [tuple(p) for p in args], steps=8))
+        elif op in ("closePath", "endPath"):
+            if len(cur) > 1:
+                contours.append(cur)
+            cur = []
+    if len(cur) > 1:
+        contours.append(cur)
+    return contours
+
+
+def _fonts_available() -> bool:
+    try:
+        import uharfbuzz  # noqa: F401
+        import fontTools  # noqa: F401
+    except ImportError:
+        return False
+    return FONT_DISPLAY.is_file() and FONT_BENGALI.is_file()
+
+
+def shaped_text_mask(font_path: Path, text: str, size: float, ss: int = 4):
+    """Render `text` at `size` px with full Unicode shaping (HarfBuzz).
+
+    Returns (mask, bbox): an "L" image at 1x scale and the ink bounds relative to the
+    pen origin (y down). Bengali and other complex scripts need the shaping pass; plain
+    PIL text rendering mangles them.
+    """
+    import uharfbuzz as hb
+    from fontTools.ttLib import TTFont
+    from PIL import Image, ImageChops, ImageDraw
+
+    face = hb.Face(hb.Blob(font_path.read_bytes()))
+    font = hb.Font(face)
+    buf = hb.Buffer()
+    buf.add_str(text)
+    buf.guess_segment_properties()
+    hb.shape(font, buf)
+
+    tt = TTFont(str(font_path))
+    scale = (size / tt["head"].unitsPerEm) * ss
+    pen_x = 0.0
+    all_polys: list[list[tuple[float, float]]] = []
+    for g, p in zip(buf.glyph_infos, buf.glyph_positions):
+        for contour in _glyph_contours(tt, g.codepoint):
+            tx = pen_x + p.x_offset * scale
+            ty = -p.y_offset * scale
+            all_polys.append([(x * scale + tx, -y * scale + ty) for x, y in contour])
+        pen_x += p.x_advance * scale
+
+    if not all_polys:
+        empty = Image.new("L", (1, 1), 0)
+        return empty, (0.0, 0.0, 1.0, 1.0)
+
+    xs = [pt[0] for poly in all_polys for pt in poly]
+    ys = [pt[1] for poly in all_polys for pt in poly]
+    x0, y0, x1, y1 = min(xs), min(ys), max(xs), max(ys)
+    w = int(math.ceil(x1 - x0)) + 2 * ss
+    h = int(math.ceil(y1 - y0)) + 2 * ss
+    big = Image.new("1", (w, h), 0)
+    for poly in all_polys:
+        tmp = Image.new("1", (w, h), 0)
+        # Even-odd fill: XOR every closed contour (holes stay hollow).
+        ImageDraw.Draw(tmp).polygon([(x - x0 + ss, y - y0 + ss) for x, y in poly], fill=1)
+        big = ImageChops.logical_xor(big, tmp)
+    mask = big.convert("L").resize((max(1, w // ss), max(1, h // ss)), Image.LANCZOS)
+    bbox = ((x0 - ss) / ss, (y0 - ss) / ss, (x1 + ss) / ss, (y1 + ss) / ss)
+    return mask, bbox
+
+
+def credit_splash(badge, size: int = 1024):
+    """The boot splash banner: the badge on top, a black-and-gold ribbon below carrying
+    the author's name (SHAKIL) and the line "I am a developer and owner" in Bengali."""
+    _, Image = _pillow()
+    from PIL import ImageDraw
+
+    canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    ribbon_h, ribbon_w, gap, top_margin = 250, 780, 42, 34
+    badge_box_h = size - top_margin - ribbon_h - gap
+    ratio = min(badge_box_h / badge.height, (size * 0.86) / badge.width)
+    bw, bh = max(1, round(badge.width * ratio)), max(1, round(badge.height * ratio))
+    small = badge.resize((bw, bh), Image.LANCZOS)
+    canvas.alpha_composite(small, ((size - bw) // 2, top_margin + (badge_box_h - bh) // 2))
+
+    rx0, ry0 = (size - ribbon_w) // 2, size - ribbon_h - top_margin
+    draw = ImageDraw.Draw(canvas)
+    draw.rounded_rectangle((rx0, ry0, rx0 + ribbon_w, ry0 + ribbon_h), radius=30,
+                           fill=COLOR_INK, outline=COLOR_GOLD, width=5)
+
+    name_mask, _ = shaped_text_mask(FONT_DISPLAY, AUTHOR_NAME, 84)
+    name_layer = Image.new("RGBA", name_mask.size, COLOR_GOLD_BRIGHT)
+    name_layer.putalpha(name_mask)
+    canvas.alpha_composite(name_layer, ((size - name_mask.width) // 2, ry0 + 40))
+
+    line_mask, _ = shaped_text_mask(FONT_BENGALI, AUTHOR_LINE, 42)
+    line_layer = Image.new("RGBA", line_mask.size, COLOR_WHITE)
+    line_layer.putalpha(line_mask)
+    canvas.alpha_composite(line_layer, ((size - line_mask.width) // 2, ry0 + ribbon_h - line_mask.height - 44))
+    return canvas
+
+
+def default_project_icon_svg() -> str:
+    """The icon "New Project" writes into a fresh project: the brand mark on a warm-white
+    plate (the old layout of the Godot default project icon, rebranded)."""
+    g = icon_geometry(100.0)
+    off = 14.0
+
+    def pts(items):
+        return " ".join(f"{x + off:.2f},{y + off:.2f}" for x, y in items)
+
+    parts = [
+        '<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128">',
+        '  <rect width="124" height="124" x="2" y="2" fill="#f4f1ea" rx="14"/>',
+        f'  <polygon points="{pts(g["star"])}" fill="{g["gold"]}" stroke="{g["gold_dark"]}" '
+        f'stroke-width="{g["stroke"]:.2f}" stroke-linejoin="round"/>',
+    ]
+    parts += [f'  <circle cx="{x + off:.2f}" cy="{y + off:.2f}" r="{r:.2f}" fill="{g["gold"]}"/>'
+              for x, y, r in g["tips"]]
+    pad_x, pad_y, pad_w, pad_h, pad_r = g["pad"]
+    parts.append(f'  <rect x="{pad_x + off:.2f}" y="{pad_y + off:.2f}" width="{pad_w:.2f}" '
+                 f'height="{pad_h:.2f}" rx="{pad_r:.2f}" fill="{g["ink"]}"/>')
+    for (x, y, w, h), half in zip(g["dpad"], (g["dpad"][0][2] * 0.3, g["dpad"][1][3] * 0.3)):
+        parts.append(f'  <rect x="{x + off:.2f}" y="{y + off:.2f}" width="{w:g}" height="{h:.2f}" '
+                     f'rx="{half:.2f}" fill="{g["gold"]}"/>')
+    parts += [f'  <circle cx="{x + off:.2f}" cy="{y + off:.2f}" r="{r:.2f}" fill="{g["gold"]}"/>'
+              for x, y, r in g["buttons"]]
+    parts.append("</svg>")
+    return "\n".join(parts) + "\n"
+
+
 def brand_mark(size: int, margin: float = 0.0, badge=None, detail: bool = True):
     """The brand mark at `size`, picking artwork that actually survives that size."""
     if not detail or size < VECTOR_BELOW:
@@ -458,7 +655,12 @@ def generate(threshold: int) -> int:
 
     # Engine binaries embed these three; they are also the fallback icon for exports.
     emit(square(badge, ENGINE_ASSETS["main/app_icon.png"], margin=0.06), "main/app_icon.png")
-    emit(square(badge, ENGINE_ASSETS["main/splash.png"], margin=0.10), "main/splash.png")
+    if _fonts_available():
+        emit(credit_splash(badge), "main/splash.png")
+    else:
+        print("warning: uharfbuzz/fonttools or the fonts in misc/scripts/fonts/ are missing; "
+              "main/splash.png is written without the author credit")
+        emit(square(badge, ENGINE_ASSETS["main/splash.png"], margin=0.10), "main/splash.png")
     emit(wide_logo(badge, wordmark, ENGINE_ASSETS["main/splash_editor.png"]), "main/splash_editor.png")
 
     # Masters.
@@ -466,10 +668,17 @@ def generate(threshold: int) -> int:
     emit(wordmark, "misc/logo/game_master_wordmark.png")
     emit(wide_logo(badge, wordmark), "misc/logo/game_master_logo_wide.png")
     svg = icon_svg(64)
-    for rel in ("misc/logo/game_master_icon.svg", "misc/dist/html/logo.svg"):
+    # misc/logo/icon.svg is the brand master icon (was the stock Godot icon before the rebrand);
+    # DefaultProjectIcon.svg is what "New Project" copies into every fresh project; icon.png is
+    # the Web editor's favicon. All three stay in lockstep with the vector geometry.
+    for rel in ("misc/logo/game_master_icon.svg", "misc/dist/html/logo.svg", "misc/logo/icon.svg"):
         (ROOT / rel).parent.mkdir(parents=True, exist_ok=True)
         (ROOT / rel).write_text(svg, encoding="utf-8", newline="\n")
         written.append(ROOT / rel)
+    default_icon = ROOT / "editor/icons/DefaultProjectIcon.svg"
+    default_icon.write_text(default_project_icon_svg(), encoding="utf-8", newline="\n")
+    written.append(default_icon)
+    emit(icon_raster(256), "misc/logo/icon.png")
 
     # Linux: the hicolor ladder plus a scalable entry for the .desktop Icon= key.
     for size in HICOLOR_SIZES:
@@ -616,11 +825,14 @@ def main() -> int:
         return 0
     if args.svg_only:
         svg = icon_svg(64)
-        for rel in ("misc/logo/game_master_icon.svg", "misc/dist/html/logo.svg"):
+        for rel in ("misc/logo/game_master_icon.svg", "misc/dist/html/logo.svg", "misc/logo/icon.svg"):
             path = ROOT / rel
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(svg, encoding="utf-8", newline="\n")
             print(f"wrote {path.relative_to(ROOT)}")
+        path = ROOT / "editor/icons/DefaultProjectIcon.svg"
+        path.write_text(default_project_icon_svg(), encoding="utf-8", newline="\n")
+        print(f"wrote {path.relative_to(ROOT)}")
         return 0
     if args.preview:
         return preview()
