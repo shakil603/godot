@@ -333,11 +333,11 @@ EditorThemeManager::ThemeConfiguration EditorThemeManager::_create_theme_config(
 			} else if (config.preset == "Breeze Dark") {
 				preset_accent_color = Color(0.239, 0.682, 0.914);
 				preset_base_color = Color(0.1255, 0.1373, 0.149);
-			} else if (config.preset == "Godot 2") {
+			} else if (config.preset == "Classic 2" || config.preset == "Godot 2") {
 				preset_accent_color = Color(0.53, 0.67, 0.89);
 				preset_base_color = Color(0.24, 0.23, 0.27);
 				preset_icon_saturation = 1;
-			} else if (config.preset == "Godot 3") {
+			} else if (config.preset == "Classic 3" || config.preset == "Godot 3") {
 				preset_accent_color = Color(0.44, 0.73, 0.98);
 				preset_base_color = Color(0.21, 0.24, 0.29);
 				preset_icon_saturation = 1;
@@ -482,7 +482,7 @@ void _load_text_editor_theme() {
 void EditorThemeManager::_populate_text_editor_styles(const Ref<EditorTheme> &p_theme, ThemeConfiguration &p_config) {
 	const String text_editor_color_theme = EDITOR_GET("text_editor/theme/color_theme");
 	const bool is_default_theme = text_editor_color_theme == "Default";
-	const bool is_godot2_theme = text_editor_color_theme == "Godot 2";
+	const bool is_godot2_theme = text_editor_color_theme == "Classic 2" || text_editor_color_theme == "Godot 2";
 	const bool is_custom_theme = text_editor_color_theme == "Custom";
 	if (is_default_theme || is_godot2_theme || is_custom_theme) {
 		HashMap<StringName, Color> colors;

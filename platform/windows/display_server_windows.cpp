@@ -871,7 +871,7 @@ String DisplayServerWindows::_get_app_id() const {
 	static String appname;
 	if (appname.is_empty()) {
 		if (Engine::get_singleton()->is_editor_hint()) {
-			appname = "Godot.GodotEditor." + String(GODOT_VERSION_FULL_CONFIG);
+			appname = "GameMaster.Editor." + String(GODOT_VERSION_FULL_CONFIG);
 		} else {
 			String name = GLOBAL_GET("application/config/name");
 			String version = GLOBAL_GET("application/config/version");
@@ -885,7 +885,7 @@ String DisplayServerWindows::_get_app_id() const {
 				}
 			}
 			clean_app_name = clean_app_name.substr(0, 120 - version.length()).trim_suffix(".");
-			appname = "Godot." + clean_app_name + "." + version;
+			appname = "GameMaster." + clean_app_name + "." + version;
 		}
 	}
 	return appname;
@@ -895,7 +895,7 @@ String DisplayServerWindows::_get_app_name() const {
 	static String appname;
 	if (appname.is_empty()) {
 		if (Engine::get_singleton()->is_editor_hint()) {
-			appname = "Godot";
+			appname = "Game Master";
 		} else {
 			appname = GLOBAL_GET("application/config/name");
 		}
@@ -1860,7 +1860,7 @@ void DisplayServerWindows::screen_set_keep_on(bool p_enable) {
 	}
 
 	if (p_enable) {
-		const String reason = "Godot Engine running with display/window/energy_saving/keep_screen_on = true";
+		const String reason = "Game Master running with display/window/energy_saving/keep_screen_on = true";
 		Char16String reason_utf16 = reason.utf16();
 		REASON_CONTEXT context;
 		context.Version = POWER_REQUEST_CONTEXT_VERSION;
@@ -8059,7 +8059,7 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Dis
 
 	String appname;
 	if (Engine::get_singleton()->is_editor_hint()) {
-		appname = "Godot.GodotEditor." + String(GODOT_VERSION_FULL_CONFIG);
+		appname = "GameMaster.Editor." + String(GODOT_VERSION_FULL_CONFIG);
 	} else {
 		String name = GLOBAL_GET("application/config/name");
 		String version = GLOBAL_GET("application/config/version");
@@ -8073,7 +8073,7 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Dis
 			}
 		}
 		clean_app_name = clean_app_name.substr(0, 120 - version.length()).trim_suffix(".");
-		appname = "Godot." + clean_app_name + "." + version;
+		appname = "GameMaster." + clean_app_name + "." + version;
 
 #ifndef TOOLS_ENABLED
 		// Set for exported projects only.

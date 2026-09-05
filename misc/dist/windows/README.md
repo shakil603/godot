@@ -11,7 +11,7 @@ to extract the Inno Setup installer then run `ISCC.exe` using
 
 ## Building
 
-- Place a Godot editor executable in this folder and rename it to `godot.exe`.
+- Place a Game Master editor executable in this folder and rename it to `godot.exe`.
 - Run the Inno Setup Compiler (part of the Inno Setup suite) on the `godot.iss` file.
 
 If everything succeeds, an installer will be generated in this folder.
