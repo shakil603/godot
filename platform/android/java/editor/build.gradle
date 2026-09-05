@@ -86,7 +86,7 @@ android {
 
         missingDimensionStrategy 'products', 'editor'
         manifestPlaceholders += [
-            editorAppName: "Godot Engine 4",
+            editorAppName: "Game Master",
             editorBuildSuffix: ""
         ]
 
@@ -133,7 +133,6 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            manifestPlaceholders += [editorBuildSuffix: " (debug)"]
             signingConfig signingConfigs.debug
         }
 
@@ -147,7 +146,6 @@ android {
                 // In addition, we update the application ID to allow installing an Android studio release build
                 // side by side with a production build from the store.
                 applicationIdSuffix ".release"
-                manifestPlaceholders += [editorBuildSuffix: " (release)"]
             }
         }
     }
