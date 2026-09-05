@@ -1,7 +1,7 @@
-#define MyAppName "Godot Engine"
+#define MyAppName "Game Master"
 #define MyAppVersion "4.8"
-#define MyAppPublisher "Godot Engine contributors"
-#define MyAppURL "https://godotengine.org/"
+#define MyAppPublisher "Game Master contributors"
+#define MyAppURL "https://github.com/shakil603/godot"
 #define MyAppExeName "godot.exe"
 
 [Setup]
@@ -17,7 +17,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 AppComments=Game Master editor
 ChangesEnvironment=yes
-DefaultDirName={localappdata}\Godot
+DefaultDirName={localappdata}\GameMaster
 DefaultGroupName=Game Master
 AllowNoIcons=yes
 UninstallDisplayIcon={app}\{#MyAppExeName}
