@@ -41,6 +41,7 @@
 #include "editor/gui/editor_toaster.h"
 #include "editor/gui/editor_version_button.h"
 #include "editor/run/editor_run_bar.h"
+#include "editor/themes/editor_icons.h"
 #include "editor/themes/editor_scale.h"
 #include "scene/gui/item_list.h"
 #include "scene/gui/rich_text_label.h"
@@ -88,7 +89,7 @@ void EditorAbout::_notification(int p_what) {
 			license_text_label->add_theme_constant_override(SceneStringName(line_separation), 4 * EDSCALE);
 			license_text_label->end_bulk_theme_override();
 
-			_logo->set_texture(get_editor_theme_icon(SNAME("Logo")));
+			_logo->set_texture(editor_get_brand_badge_texture());
 
 			for (ItemList *il : name_lists) {
 				for (int i = 0; i < il->get_item_count(); i++) {

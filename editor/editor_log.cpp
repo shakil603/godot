@@ -587,7 +587,7 @@ EditorLog::EditorLog() {
 	hbox->add_child(editor_filter->toggle_button);
 	type_filter_map.insert(MSG_TYPE_EDITOR, editor_filter);
 
-	add_message(GODOT_VERSION_FULL_NAME " (c) 2007-present Juan Linietsky, Ariel Manzur & Godot Contributors.");
+	add_message(GODOT_VERSION_FULL_NAME " (c) 2007-present Juan Linietsky, Ariel Manzur & contributors.");
 
 	eh.errfunc = _error_handler;
 	eh.userdata = this;

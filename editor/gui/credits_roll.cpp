@@ -39,6 +39,7 @@
 #include "editor/editor_node.h"
 #include "editor/editor_string_names.h"
 #include "editor/project_manager/project_manager.h"
+#include "editor/themes/editor_icons.h"
 #include "editor/themes/editor_scale.h"
 #include "scene/gui/box_container.h"
 #include "scene/gui/color_rect.h"
@@ -161,10 +162,10 @@ void CreditsRoll::roll_credits() {
 		bold_font = theme->get_font("bold", EditorStringName(EditorFonts));
 
 		{
-			const Ref<Texture2D> logo_texture = theme->get_icon("Logo", EditorStringName(EditorIcons));
+			const Ref<Texture2D> logo_texture = editor_get_brand_badge_texture();
 
 			TextureRect *logo = memnew(TextureRect);
-			logo->set_custom_minimum_size(Vector2(0, logo_texture->get_height() * 3));
+			logo->set_custom_minimum_size(Vector2(0, 256 * EDSCALE));
 			logo->set_stretch_mode(TextureRect::STRETCH_KEEP_ASPECT_CENTERED);
 			logo->set_texture(logo_texture);
 			content->add_child(logo);
@@ -237,7 +238,7 @@ void CreditsRoll::roll_credits() {
 		_create_label(String::utf8(GODOT_LICENSE_TEXT));
 
 		_create_nothing(400 * EDSCALE);
-		_create_label(TTRC("Thank you for choosing Godot Engine!"), LabelSize::BIG_HEADER);
+		_create_label(TTRC("Thank you for choosing Game Master!"), LabelSize::BIG_HEADER);
 	}
 	// Needs to be set here, otherwise the starting position will be incorrect.
 	content->set_anchors_and_offsets_preset(Control::PRESET_VCENTER_WIDE);

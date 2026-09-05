@@ -37,3 +37,8 @@ void editor_register_icons(const Ref<Theme> &p_theme, bool p_dark_theme, float p
 void editor_copy_icons(const Ref<Theme> &p_theme, const Ref<Theme> &p_old_theme);
 
 String get_default_project_icon();
+
+// Full-color brand badge for the About dialog, the project manager title bar and
+// similar chrome. Unlike the flat vector lockups, this keeps the original artwork,
+// so it is loaded from the application icon PNG embedded into every binary.
+Ref<Texture2D> editor_get_brand_badge_texture(int p_max_size = 256);

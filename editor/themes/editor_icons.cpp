@@ -30,11 +30,14 @@
 
 #include "editor_icons.h"
 
+#include "core/io/image.h"
 #include "editor/editor_string_names.h"
 #include "editor/themes/editor_color_map.h"
 #include "editor/themes/editor_icons.gen.h"
 #include "editor/themes/editor_scale.h"
+#include "main/app_icon.gen.h"
 #include "scene/resources/dpi_texture.h"
+#include "scene/resources/image_texture.h"
 
 #include "modules/svg/image_loader_svg.h"
 
@@ -224,4 +227,25 @@ String get_default_project_icon() {
 		}
 	}
 	return String();
+}
+
+// Full-color brand badge for the About dialog, the project manager title bar and
+// similar chrome. Unlike the flat vector lockups, this keeps the original artwork,
+// so it is loaded from the application icon PNG embedded into every binary.
+Ref<Texture2D> editor_get_brand_badge_texture(int p_max_size) {
+	static HashMap<int, Ref<Texture2D>> badge_cache;
+	if (badge_cache.has(p_max_size)) {
+		return badge_cache[p_max_size];
+	}
+	Ref<Image> badge = memnew(Image(app_icon_png));
+	if (!badge->is_empty() && p_max_size > 0 && MAX(badge->get_width(), badge->get_height()) > p_max_size) {
+		const float ratio = (float)p_max_size / (float)MAX(badge->get_width(), badge->get_height());
+		badge->resize(int(badge->get_width() * ratio), int(badge->get_height() * ratio), Image::INTERPOLATE_CUBIC);
+	}
+	Ref<Texture2D> badge_texture;
+	if (!badge->is_empty()) {
+		badge_texture = ImageTexture::create_from_image(badge);
+	}
+	badge_cache[p_max_size] = badge_texture;
+	return badge_texture;
 }
