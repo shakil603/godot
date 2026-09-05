@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
   <mime-type type="application/x-godot-project">
-    <comment>Godot Engine project</comment>
+    <comment>Game Master project</comment>
     <sub-class-of type="text/plain"/>
     <icon name="x-godot-project"/>
     <glob pattern="project.godot"/>
