@@ -31,7 +31,7 @@
 	<key>NSRequiresAquaSystemAppearance</key>
 	<false/>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2007-present Juan Linietsky, Ariel Manzur &amp; Godot Engine contributors</string>
+	<string>© 2007-present Juan Linietsky, Ariel Manzur &amp; Game Master contributors</string>
 	<key>CFBundleSupportedPlatforms</key>
 	<array>
 		<string>MacOSX</string>
@@ -179,7 +179,7 @@
 			<key>UTTypeReferenceURL</key>
 			<string></string>
 			<key>UTTypeDescription</key>
-			<string>Godot Engine project</string>
+			<string>Game Master project</string>
 			<key>UTTypeIconFile</key>
 			<string>Project.icns</string>
 			<key>UTTypeConformsTo</key>
