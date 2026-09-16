@@ -88,6 +88,17 @@ TEST_CASE("[PCKPacker] Pack a PCK file with some files and directories") {
 
 	const String base_dir = OS::get_singleton()->get_executable_path().get_base_dir();
 
+	// A PCK stores the raw contents of every added file, so the expected size is
+	// derived from those files rather than hardcoded, as their size may change
+	// (e.g. when brand assets are regenerated).
+	const String version_path = base_dir.path_join("../version.py");
+	const String icon_png_path = base_dir.path_join("../misc/logo/icon.png");
+	const String icon_svg_path = base_dir.path_join("../misc/logo/icon.svg");
+	const String logo_png_path = base_dir.path_join("../misc/logo/logo.png");
+	const uint64_t content_size = uint64_t(FileAccess::get_size(version_path)) + uint64_t(FileAccess::get_size(icon_png_path)) +
+			uint64_t(FileAccess::get_size(icon_svg_path)) + uint64_t(FileAccess::get_size(logo_png_path)) +
+			uint64_t(String("Hello world!").to_utf8_buffer().size());
+
 	CHECK_MESSAGE(
 			pck_packer.add_file("version.py", base_dir.path_join("../version.py"), "version.py") == OK,
 			"Adding a file to the PCK should return an OK error code.");
@@ -113,10 +124,10 @@ TEST_CASE("[PCKPacker] Pack a PCK file with some files and directories") {
 			err == OK,
 			"The generated non-empty PCK file should be opened successfully.");
 	CHECK_MESSAGE(
-			f->get_length() >= 18000,
+			f->get_length() >= content_size,
 			"The generated non-empty PCK file should be large enough to actually hold the contents specified above.");
 	CHECK_MESSAGE(
-			f->get_length() <= 27000,
+			f->get_length() <= content_size + 4096,
 			"The generated non-empty PCK file shouldn't be too large.");
 }
 
