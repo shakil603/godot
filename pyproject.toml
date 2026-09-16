@@ -76,6 +76,10 @@ skip = [
 	"platform/android/java/lib/src/main/java/com/*",
 	"platform/web/package-lock.json",
 ]
+# Brand SVGs embed the icon bitmap as a base64 data URI. The blob is binary data,
+# so without this `write-changes` would corrupt the embedded image by "fixing" the
+# dictionary words that randomly occur in it.
+ignore-regex = ["base64,[A-Za-z0-9+/=]{16,}"]
 ignore-words-list = [
 	"breaked",
 	"cancelled",
