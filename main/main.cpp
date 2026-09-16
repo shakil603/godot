@@ -374,20 +374,12 @@ void finalize_theme_db() {
 #endif
 
 void Main::print_header(bool p_rich) {
-	if (GODOT_VERSION_TIMESTAMP > 0) {
-		// Version timestamp available.
-		if (p_rich) {
-			Engine::get_singleton()->print_header_rich("\u001b[38;5;39m" + String(GODOT_VERSION_NAME) + "\u001b[0m v" + get_full_version_string() + " (" + Time::get_singleton()->get_datetime_string_from_unix_time(GODOT_VERSION_TIMESTAMP, true) + " UTC) - \u001b[4m" + String(GODOT_VERSION_WEBSITE));
-		} else {
-			Engine::get_singleton()->print_header(String(GODOT_VERSION_NAME) + " v" + get_full_version_string() + " (" + Time::get_singleton()->get_datetime_string_from_unix_time(GODOT_VERSION_TIMESTAMP, true) + " UTC) - " + String(GODOT_VERSION_WEBSITE));
-		}
+	if (p_rich) {
+		Engine::get_singleton()->print_header_rich("\u001b[38;5;39mGame Master Engine\u001b[0m v" + get_full_version_string() + " (Developed by Shakil)");
 	} else {
-		if (p_rich) {
-			Engine::get_singleton()->print_header_rich("\u001b[38;5;39m" + String(GODOT_VERSION_NAME) + "\u001b[0m v" + get_full_version_string() + " - \u001b[4m" + String(GODOT_VERSION_WEBSITE));
-		} else {
-			Engine::get_singleton()->print_header(String(GODOT_VERSION_NAME) + " v" + get_full_version_string() + " - " + String(GODOT_VERSION_WEBSITE));
-		}
+		Engine::get_singleton()->print_header("Game Master Engine v" + get_full_version_string() + " (Developed by Shakil)");
 	}
+	Engine::get_singleton()->print_header("Game Master Engine is built upon the Godot Engine core.");
 }
 
 /**
