@@ -17,13 +17,15 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName",            "Godot Engine"
-            VALUE "FileDescription",        GODOT_VERSION_NAME
+            VALUE "CompanyName",            "Shakil / Game Master"
+            VALUE "FileDescription",        "Game Master Engine Editor"
             VALUE "FileVersion",            GODOT_VERSION_NUMBER
-            VALUE "ProductName",            GODOT_VERSION_NAME
+            VALUE "InternalName",           "game_master"
+            VALUE "OriginalFilename",       "game_master.exe"
+            VALUE "ProductName",            "Game Master Engine"
             VALUE "Licence",                "MIT"
-            VALUE "LegalCopyright",         "(c) 2007-present Juan Linietsky, Ariel Manzur and Godot Engine contributors"
-            VALUE "Info",                   "https://godotengine.org"
+            VALUE "LegalCopyright",         "Copyright (c) Shakil. Game Master Engine is built upon the Godot Engine core."
+            VALUE "Info",                   "https://gamemasterengine.com"
             VALUE "ProductVersion",         GODOT_VERSION_FULL_BUILD
         END
     END

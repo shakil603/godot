@@ -57,6 +57,9 @@ void EditorAbout::_notification(int p_what) {
 	switch (p_what) {
 		case NOTIFICATION_TRANSLATION_CHANGED: {
 			_about_text_label->set_text(
+					TTR("Game Master Engine - Next Generation Game Development Environment") + "\n" +
+					TTR("Developed & Owned by Shakil") + "\n" +
+					TTR("Game Master Engine is built upon the Godot Engine core.") + "\n" +
 					String(U"© 2014-present ") + TTR("Godot Engine contributors") + ".\n" +
 					String(U"© 2007-2014 Juan Linietsky, Ariel Manzur.\n"));
 
@@ -211,6 +214,7 @@ Label *EditorAbout::_create_section(Control *p_parent, const String &p_name, con
 }
 
 EditorAbout::EditorAbout() {
+	set_title(TTRC("About Game Master Engine"));
 	set_title(TTRC("Thanks from the Godot community!"));
 	set_hide_on_ok(true);
 

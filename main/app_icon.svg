@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Game Master Engine brand asset. Game Master Engine is built upon the Godot Engine core. -->
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><defs>
 <linearGradient id="gm_gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbeaa6"/><stop offset="0.45" stop-color="#e3b74e"/><stop offset="0.8" stop-color="#a97a1f"/><stop offset="1" stop-color="#7a5514"/></linearGradient>
 <linearGradient id="gm_gold_d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c89a30"/><stop offset="1" stop-color="#5e3f0d"/></linearGradient>
 <linearGradient id="gm_silver" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.5" stop-color="#b9bfc7"/><stop offset="1" stop-color="#666d76"/></linearGradient>

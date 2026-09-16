@@ -644,6 +644,10 @@ if env.GetOption("num_jobs") == altered_num_jobs:
 
 env.extra_suffix = ""
 
+# Game Master rebrand: base filename prefix for all generated binaries
+# (used by platform/*/SCsub, e.g. game_master.linuxbsd.editor.x86_64).
+env["bin_prefix"] = methods.get_version_info(silent=True)["short_name"]
+
 if env["extra_suffix"] != "":
     env.extra_suffix += "." + env["extra_suffix"]
 

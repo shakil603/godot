@@ -29,7 +29,7 @@ def version_info_builder(target, source, env):
 #define GODOT_VERSION_MODULE_CONFIG "{module_config}"
 #define GODOT_VERSION_WEBSITE "{website}"
 #define GODOT_VERSION_DOCS_BRANCH "{docs_branch}"
-#define GODOT_VERSION_DOCS_URL "https://docs.godotengine.org/en/" GODOT_VERSION_DOCS_BRANCH
+#define GODOT_VERSION_DOCS_URL "https://docs.gamemasterengine.com"
 """.format(**source[0].read())
         )
 
