@@ -358,8 +358,9 @@ EditorThemeManager::ThemeConfiguration EditorThemeManager::_create_theme_config(
 				preset_base_color = Color(0.89, 0.86, 0.79);
 				preset_contrast = light_contrast;
 			} else { // Default
-				preset_accent_color = Color(0.337, 0.62, 1.0);
-				preset_base_color = Color(0.161, 0.161, 0.161);
+				// Game Master Engine branding: gold accent on a navy base.
+				preset_accent_color = Color(0.949, 0.757, 0.306);
+				preset_base_color = Color(0.102, 0.114, 0.161);
 			}
 
 			config.accent_color = preset_accent_color;

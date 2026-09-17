@@ -91,6 +91,7 @@ class ProjectManager : public Control {
 	Control *right_menu_spacer = nullptr;
 	Control *right_spacer = nullptr;
 	Button *title_bar_logo = nullptr;
+	Label *title_bar_label = nullptr;
 	HBoxContainer *main_view_toggles = nullptr;
 	Button *quick_settings_button = nullptr;
 	VBoxContainer *project_list_sidebar = nullptr;
