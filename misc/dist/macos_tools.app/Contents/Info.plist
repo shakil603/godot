@@ -11,9 +11,9 @@
 	<key>CFBundleName</key>
 	<string>game_master</string>
 	<key>CFBundleIconFile</key>
-	<string>GodotLG.icns</string>
+	<string>GameMaster.icns</string>
 	<key>CFBundleIconName</key>
-	<string>GodotLG</string>
+	<string>GameMaster</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.gamemasterengine.editor</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -93,7 +93,7 @@
 			<key>UTTypeReferenceURL</key>
 			<string></string>
 			<key>UTTypeDescription</key>
-			<string>Godot Engine scene</string>
+			<string>Game Master Engine scene</string>
 			<key>UTTypeIconFile</key>
 			<string>Scene.icns</string>
 			<key>UTTypeConformsTo</key>
@@ -141,7 +141,7 @@
 			<key>UTTypeReferenceURL</key>
 			<string></string>
 			<key>UTTypeDescription</key>
-			<string>Godot Engine resource</string>
+			<string>Game Master Engine resource</string>
 			<key>UTTypeIconFile</key>
 			<string>Resource.icns</string>
 			<key>UTTypeConformsTo</key>
@@ -165,7 +165,7 @@
 			<key>UTTypeReferenceURL</key>
 			<string></string>
 			<key>UTTypeDescription</key>
-			<string>Godot Engine shader</string>
+			<string>Game Master Engine shader</string>
 			<key>UTTypeIconFile</key>
 			<string>Shader.icns</string>
 			<key>UTTypeConformsTo</key>
@@ -188,7 +188,7 @@
 			<key>UTTypeReferenceURL</key>
 			<string></string>
 			<key>UTTypeDescription</key>
-			<string>Godot Engine project</string>
+			<string>Game Master Engine project</string>
 			<key>UTTypeIconFile</key>
 			<string>Project.icns</string>
 			<key>UTTypeConformsTo</key>

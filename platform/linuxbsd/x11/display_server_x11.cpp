@@ -5841,12 +5841,12 @@ void DisplayServerX11::_update_context(WindowData &wd) {
 		if (context == DisplayServerEnums::CONTEXT_ENGINE) {
 			String config_name = GLOBAL_GET("application/config/name");
 			if (config_name.length() == 0) {
-				class_str = "Godot_Engine";
+				class_str = "Game_Master";
 			} else {
 				class_str = config_name.utf8();
 			}
 		} else {
-			class_str = "Godot";
+			class_str = "Game_Master";
 		}
 
 		classHint->res_class = class_str.ptrw();

@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Godot Engine
+Name=Game Master Engine
 GenericName=Libre game engine
 GenericName[el]=Ελεύθερη μηχανή παιχνιδιού
 GenericName[fr]=Moteur de jeu libre
@@ -19,10 +19,10 @@ Comment[ru]=Кроссплатформенный движок с многофу�
 Comment[uk]=Багатофункціональний кросплатформний рушій для створення 2D та 3D ігор
 Comment[zh_CN]=多平台 2D 和 3D 游戏引擎，带有功能丰富的编辑器
 Keywords=game development;development;IDE;game engine;
-Exec=godot %f
-Icon=godot
+Exec=game_master %f
+Icon=game_master
 Terminal=false
 Type=Application
 MimeType=application/x-godot-project;
 Categories=Development;IDE;
-StartupWMClass=Godot
+StartupWMClass=Game_Master

@@ -895,7 +895,7 @@ String DisplayServerWindows::_get_app_name() const {
 	static String appname;
 	if (appname.is_empty()) {
 		if (Engine::get_singleton()->is_editor_hint()) {
-			appname = "Godot";
+			appname = "Game Master";
 		} else {
 			appname = GLOBAL_GET("application/config/name");
 		}
