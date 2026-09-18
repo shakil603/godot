@@ -46,7 +46,7 @@ void EditorColorMap::create() {
 	// This can be a basis for proper palette validation later.
 
 	// Convert:               FROM       TO
-	add_conversion_color_pair("#478cbf", "#f2c14e"); // Godot Blue -> Game Master gold
+	add_conversion_color_pair("#478cbf", "#dbb15f"); // Godot Blue -> Game Master badge gold
 	add_conversion_color_pair("#414042", "#414042"); // Godot Gray
 
 	add_conversion_color_pair("#ffffff", "#414141"); // Pure white
