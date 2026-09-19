@@ -253,6 +253,8 @@ def detect_modules(search_path, recursive=False):
     absolute, then it is a custom module collected outside of the engine source.
     """
     modules = OrderedDict()
+    # Short name of this engine (from `version.py`), used to detect engine sources.
+    engine_short_name = get_version_info(silent=True)["short_name"]
 
     def add_module(path):
         module_name = os.path.basename(path)
@@ -261,11 +263,11 @@ def detect_modules(search_path, recursive=False):
 
     def is_engine(path):
         # Prevent recursively detecting modules in self and other
-        # Godot sources when using `custom_modules` build option.
+        # engine sources when using `custom_modules` build option.
         version_path = os.path.join(path, "version.py")
         if os.path.exists(version_path):
             with open(version_path, "r", encoding="utf-8") as f:
-                if 'short_name = "godot"' in f.read():
+                if f'short_name = "{engine_short_name}"' in f.read():
                     return True
         return False
 
@@ -1233,7 +1235,12 @@ def generate_vs_project(env, original_args, project_name="godot"):
     others_active = []
 
     get_dependencies(
-        env.File(f"#bin/godot{env['PROGSUFFIX']}"), env, extensions, headers_active, sources_active, others_active
+        env.File(f"#bin/{env['bin_prefix']}{env['PROGSUFFIX']}"),
+        env,
+        extensions,
+        headers_active,
+        sources_active,
+        others_active,
     )
 
     all_items = []
@@ -1294,7 +1301,7 @@ def generate_vs_project(env, original_args, project_name="godot"):
             properties.append(
                 "<ActiveProjectItemList_%s>;%s;</ActiveProjectItemList_%s>" % (x, ";".join(itemlist[x]), x)
             )
-        output = os.path.join("bin", f"godot{env['PROGSUFFIX']}")
+        output = os.path.join("bin", f"{env['bin_prefix']}{env['PROGSUFFIX']}")
 
         # The modules_enabled.gen.h header containing the defines is only generated on build, and only for the most recently built
         # platform, which means VS can't properly render code that's inside module-specific ifdefs. This adds those defines to the

@@ -358,8 +358,10 @@ EditorThemeManager::ThemeConfiguration EditorThemeManager::_create_theme_config(
 				preset_base_color = Color(0.89, 0.86, 0.79);
 				preset_contrast = light_contrast;
 			} else { // Default
-				preset_accent_color = Color(0.337, 0.62, 1.0);
-				preset_base_color = Color(0.161, 0.161, 0.161);
+				// Game Master Engine branding: the gold sampled from the logo
+				// artwork, on the near-black used behind the badge.
+				preset_accent_color = Color(0.859, 0.694, 0.373);
+				preset_base_color = Color(0.082, 0.090, 0.110);
 			}
 
 			config.accent_color = preset_accent_color;

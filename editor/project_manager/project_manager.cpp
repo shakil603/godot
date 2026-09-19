@@ -59,6 +59,7 @@
 #include "main/main.h"
 #include "scene/gui/check_box.h"
 #include "scene/gui/flow_container.h"
+#include "scene/gui/label.h"
 #include "scene/gui/line_edit.h"
 #include "scene/gui/margin_container.h"
 #include "scene/gui/menu_bar.h"
@@ -265,6 +266,10 @@ void ProjectManager::_update_theme(bool p_skip_creation) {
 		main_view_container->add_theme_style_override(SceneStringName(panel), get_theme_stylebox("panel_container", "ProjectManager"));
 
 		title_bar_logo->set_button_icon(get_editor_theme_icon("TitleBarLogo"));
+
+		title_bar_label->add_theme_font_override(SceneStringName(font), get_theme_font(SNAME("bold"), EditorStringName(EditorFonts)));
+		title_bar_label->add_theme_font_size_override(SceneStringName(font_size), get_theme_font_size(SNAME("bold_size"), EditorStringName(EditorFonts)));
+		title_bar_label->add_theme_color_override(SceneStringName(font_color), get_theme_color(SNAME("font_color"), "MainScreenButton"));
 
 		_set_main_view_icon(MAIN_VIEW_PROJECTS, get_editor_theme_icon("ProjectList"));
 		_set_main_view_icon(MAIN_VIEW_ASSETLIB, get_editor_theme_icon("AssetStore"));
@@ -1487,9 +1492,17 @@ ProjectManager::ProjectManager() {
 
 		title_bar_logo = memnew(Button);
 		title_bar_logo->set_flat(true);
-		title_bar_logo->set_tooltip_text(TTR("About Godot"));
+		title_bar_logo->set_tooltip_text(TTR("About Game Master Engine"));
 		left_hbox->add_child(title_bar_logo);
 		title_bar_logo->connect(SceneStringName(pressed), callable_mp(this, &ProjectManager::_show_about));
+
+		// Brand wordmark displayed next to the logo. Not translatable, it is a product name.
+		title_bar_label = memnew(Label("GAME MASTER"));
+		title_bar_label->set_auto_translate_mode(Node::AUTO_TRANSLATE_MODE_DISABLED);
+		title_bar_label->set_mouse_filter(Control::MOUSE_FILTER_IGNORE);
+		title_bar_label->set_v_size_flags(Control::SIZE_SHRINK_CENTER);
+		title_bar_label->set_vertical_alignment(VerticalAlignment::VERTICAL_ALIGNMENT_CENTER);
+		left_hbox->add_child(title_bar_label);
 
 		bool global_menu = !bool(EDITOR_GET("interface/editor/appearance/use_embedded_menu")) && NativeMenu::get_singleton()->has_feature(NativeMenu::FEATURE_GLOBAL_MENU);
 		if (global_menu) {
