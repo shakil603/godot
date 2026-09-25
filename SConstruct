@@ -272,7 +272,7 @@ opts.Add(BoolVariable("werror", "Treat compiler warnings as errors", False))
 opts.Add("extra_suffix", "Custom extra suffix added to the base filename of all generated binary files", "")
 opts.Add("object_prefix", "Custom prefix added to the base filename of all generated object files", "")
 opts.Add(BoolVariable("vsproj", "Generate a Visual Studio solution", False))
-opts.Add("vsproj_name", "Name of the Visual Studio solution", "godot")
+opts.Add("vsproj_name", "Name of the Visual Studio solution", "game_master")
 opts.Add("import_env_vars", "A comma-separated list of environment variables to copy from the outer environment.", "")
 opts.Add(BoolVariable("disable_exceptions", "Force disabling exception handling code", True))
 opts.Add(BoolVariable("disable_2d", "Disable 2D nodes for a smaller executable", False))
@@ -1043,6 +1043,11 @@ if hasattr(detect, "get_program_suffix"):
     suffix = "." + detect.get_program_suffix()
 else:
     suffix = "." + env["platform"]
+
+# White-label binary name prefix (Game Master Engine).
+# Produces e.g. game_master.windows.editor.x86_64.exe, game_master.linuxbsd.editor.x86_64,
+# game_master.macos.editor.x86_64 instead of the upstream "godot" prefix.
+env["bin_prefix"] = "game_master"
 
 suffix += "." + env["target"]
 if env.dev_build:

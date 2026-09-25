@@ -388,7 +388,13 @@ void EditorNode::_version_control_menu_option(int p_idx) {
 
 void EditorNode::_update_title() {
 	const String appname = GLOBAL_GET("application/config/name");
-	String title = (appname.is_empty() ? TTR("Unnamed Project") : appname);
+	// Game Master Engine white-label window titles.
+	String title;
+	if (appname.is_empty()) {
+		title = "Game Master Engine Editor | Developed by Shakil";
+	} else {
+		title = vformat("Game Master - %s", appname);
+	}
 	const String edited = editor_data.get_edited_scene_root() ? editor_data.get_edited_scene_root()->get_scene_file_path() : String();
 	if (!edited.is_empty()) {
 		// Display the edited scene name before the program name so that it can be seen in the OS task bar.
@@ -398,7 +404,7 @@ void EditorNode::_update_title() {
 		// Display the "modified" mark before anything else so that it can always be seen in the OS task bar.
 		title = vformat("(*) %s", title);
 	}
-	DisplayServer::get_singleton()->window_set_title(title + String(" - ") + GODOT_VERSION_NAME);
+	DisplayServer::get_singleton()->window_set_title(title);
 	if (project_title) {
 		project_title->set_text(title);
 	}
@@ -9179,7 +9185,7 @@ EditorNode::EditorNode() {
 	ED_SHORTCUT_AND_COMMAND("editor/report_a_bug", TTRC("Report a Bug"));
 	ED_SHORTCUT_AND_COMMAND("editor/suggest_a_feature", TTRC("Suggest a Feature"));
 	ED_SHORTCUT_AND_COMMAND("editor/send_docs_feedback", TTRC("Send Docs Feedback"));
-	ED_SHORTCUT_AND_COMMAND("editor/about", TTRC("About Godot..."));
+	ED_SHORTCUT_AND_COMMAND("editor/about", TTRC("About Game Master..."));
 	ED_SHORTCUT_AND_COMMAND("editor/support_development", TTRC("Support Godot Development"));
 
 	// Use the Ctrl modifier so F2 can be used to rename nodes in the scene tree dock.

@@ -57,6 +57,9 @@ void EditorAbout::_notification(int p_what) {
 	switch (p_what) {
 		case NOTIFICATION_TRANSLATION_CHANGED: {
 			_about_text_label->set_text(
+					TTR("Game Master Engine - Next Generation Game Development Environment") + "\n" +
+					TTR("Developed & Owned by Shakil") + "\n" +
+					TTR("Game Master Engine is built upon the Godot Engine core.") + "\n\n" +
 					String(U"© 2014-present ") + TTR("Godot Engine contributors") + ".\n" +
 					String(U"© 2007-2014 Juan Linietsky, Ariel Manzur.\n"));
 
@@ -211,7 +214,7 @@ Label *EditorAbout::_create_section(Control *p_parent, const String &p_name, con
 }
 
 EditorAbout::EditorAbout() {
-	set_title(TTRC("Thanks from the Godot community!"));
+	set_title(TTRC("About Game Master Engine"));
 	set_hide_on_ok(true);
 
 	VBoxContainer *vbc = memnew(VBoxContainer);
@@ -306,7 +309,7 @@ EditorAbout::EditorAbout() {
 	license_thirdparty->set_h_size_flags(Control::SIZE_EXPAND_FILL);
 	tc->add_child(license_thirdparty);
 
-	Label *tpl_label = memnew(Label(TTRC("Godot Engine relies on a number of third-party free and open source libraries, all compatible with the terms of its MIT license. The following is an exhaustive list of all such third-party components with their respective copyright statements and license terms.")));
+	Label *tpl_label = memnew(Label(TTRC("Game Master Engine is built upon the Godot Engine core and relies on a number of third-party free and open source libraries, all compatible with the terms of its MIT license. The following is an exhaustive list of all such third-party components with their respective copyright statements and license terms.")));
 	tpl_label->set_focus_mode(Control::FOCUS_ACCESSIBILITY);
 	tpl_label->set_h_size_flags(Control::SIZE_EXPAND_FILL);
 	tpl_label->set_autowrap_mode(TextServer::AUTOWRAP_WORD_SMART);
