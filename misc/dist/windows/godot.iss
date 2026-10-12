@@ -1,4 +1,4 @@
-#define MyAppName "Godot Engine"
+#define MyAppName "Legend of the Game Engine"
 #define MyAppVersion "4.8"
 #define MyAppPublisher "Godot Engine contributors"
 #define MyAppURL "https://godotengine.org/"
@@ -15,10 +15,10 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-AppComments=Godot Engine editor
+AppComments=Legend of the Game Engine editor
 ChangesEnvironment=yes
 DefaultDirName={localappdata}\Godot
-DefaultGroupName=Godot Engine
+DefaultGroupName=Legend of the Game Engine
 AllowNoIcons=yes
 UninstallDisplayIcon={app}\{#MyAppExeName}
 #ifdef App32Bit
@@ -37,7 +37,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "modifypath"; Description: "Add Godot to PATH environment variable"
+Name: "modifypath"; Description: "Add Legend to PATH environment variable"
 
 [Files]
 Source: "{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion

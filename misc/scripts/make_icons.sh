@@ -1,26 +1,16 @@
 #!/usr/bin/env bash
 
-# Generate .ico, .icns and .zip set of icons for Steam
+# Generate the .ico, .icns and .zip icon set used for Steam and Linux packages.
+#
+# All artwork comes from the single brand banner (misc/logo/*.jpeg) through
+# misc/scripts/make_branding.py, so the icons always match the engine branding.
 
-# Make icons with transparent backgrounds and all sizes
-for s in 16 24 32 48 64 128 256 512 1024; do
-  convert -resize ${s}x$s -antialias \
-          -background transparent \
-          ../../misc/logo/icon.svg icon$s.png
-done
+set -e
 
-# 16px tga file for library
-convert icon16.png icon16.tga
+CURDIR="$(cd "$(dirname "$0")" && pwd)"
+OUTDIR="${1:-.}"
 
-# zip for Linux
-zip godot-icons.zip icon*.png
+mkdir -p "$OUTDIR"
+python3 "$CURDIR/make_branding.py" --steam-icons "$OUTDIR"
 
-# ico for Windows
-# Not including biggest ones or it blows up in size
-icotool -c -o godot-icon.ico icon{16,24,32,48,64,128,256}.png
-
-# icns for macOS
-# Only some sizes: https://iconhandbook.co.uk/reference/chart/osx/
-png2icns godot-icon.icns icon{16,32,128,256,512,1024}.png
-
-rm -f icon*.png
+echo "Wrote icon16..icon1024.png, godot-icon.ico, godot-icon.icns and godot-icons.zip to $OUTDIR"

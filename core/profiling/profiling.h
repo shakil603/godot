@@ -105,7 +105,7 @@ void godot_cleanup_profiler();
 
 PERFETTO_DEFINE_CATEGORIES(
 		perfetto::Category("godot")
-				.SetDescription("Godot Engine Events"),
+				.SetDescription("Legend of the Game Engine Events"),
 		perfetto::Category("godot_scripting")
 				.SetDescription("Godot Scripting Events"), );
 

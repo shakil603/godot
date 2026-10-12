@@ -551,7 +551,7 @@ void ProjectDialog::ok_pressed() {
 			nonempty_confirmation = memnew(ConfirmationDialog);
 			nonempty_confirmation->set_flag(Window::FLAG_RESIZE_DISABLED, true);
 			nonempty_confirmation->set_title(TTRC("Warning: This folder is not empty"));
-			nonempty_confirmation->set_text(TTRC("You are about to create a Godot project in a non-empty folder.\nThe entire contents of this folder will be imported as project resources!\n\nAre you sure you wish to continue?"));
+			nonempty_confirmation->set_text(TTRC("You are about to create a Legend of the Game Engine project in a non-empty folder.\nThe entire contents of this folder will be imported as project resources!\n\nAre you sure you wish to continue?"));
 			nonempty_confirmation->get_ok_button()->connect(SceneStringName(pressed), callable_mp(this, &ProjectDialog::_nonempty_confirmation_ok_pressed));
 			add_child(nonempty_confirmation);
 		}

@@ -4241,7 +4241,7 @@ DocumentEditorContainer::DocumentEditorContainer(bool p_is_main_editor, const St
 
 	disk_changed = memnew(ConfirmationDialog);
 	{
-		disk_changed->set_title(TTRC("Files have been modified outside Godot"));
+		disk_changed->set_title(TTRC("Files have been modified outside Legend of the Game Engine"));
 
 		VBoxContainer *vbc = memnew(VBoxContainer);
 		disk_changed->add_child(vbc);

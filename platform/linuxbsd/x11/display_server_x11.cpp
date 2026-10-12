@@ -6667,7 +6667,7 @@ DisplayServerEnums::WindowID DisplayServerX11::_create_window(DisplayServerEnums
 		}
 
 		/* set the titlebar name */
-		XStoreName(x11_display, wd.x11_window, "Godot");
+		XStoreName(x11_display, wd.x11_window, "Legend of the Game Engine");
 		XSetWMProtocols(x11_display, wd.x11_window, &wm_delete, 1);
 		if (xdnd_aware != None) {
 			XChangeProperty(x11_display, wd.x11_window, xdnd_aware, XA_ATOM, 32, PropModeReplace, (unsigned char *)&xdnd_version, 1);

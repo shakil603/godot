@@ -2168,7 +2168,7 @@ void EditorNode::_dialog_display_load_error(String p_file, Error p_error) {
 				show_warning(vformat(TTR("Missing file '%s' or one of its dependencies."), p_file.get_file()));
 			} break;
 			case ERR_FILE_UNRECOGNIZED: {
-				show_warning(vformat(TTR("File '%s' is saved in a format that is newer than the formats supported by this version of Godot, so it can't be opened."), p_file.get_file()));
+				show_warning(vformat(TTR("File '%s' is saved in a format that is newer than the formats supported by this version of Legend of the Game Engine, so it can't be opened."), p_file.get_file()));
 			} break;
 			default: {
 				show_warning(vformat(TTR("Error while loading file '%s'."), p_file.get_file()));
@@ -7811,7 +7811,7 @@ bool EditorNode::call_build() {
 
 	for (int i = 0; i < build_callback_count && builds_successful; i++) {
 		if (!build_callbacks[i]()) {
-			ERR_PRINT("A Godot Engine build callback failed.");
+			ERR_PRINT("A Legend of the Game Engine build callback failed.");
 			builds_successful = false;
 		}
 	}
@@ -9206,7 +9206,7 @@ EditorNode::EditorNode() {
 	ED_SHORTCUT_AND_COMMAND("editor/report_a_bug", TTRC("Report a Bug"));
 	ED_SHORTCUT_AND_COMMAND("editor/suggest_a_feature", TTRC("Suggest a Feature"));
 	ED_SHORTCUT_AND_COMMAND("editor/send_docs_feedback", TTRC("Send Docs Feedback"));
-	ED_SHORTCUT_AND_COMMAND("editor/about", TTRC("About Godot..."));
+	ED_SHORTCUT_AND_COMMAND("editor/about", TTRC("About Legend of the Game Engine..."));
 	ED_SHORTCUT_AND_COMMAND("editor/support_development", TTRC("Support Godot Development"));
 
 	// Use the Ctrl modifier so F2 can be used to rename nodes in the scene tree dock.
@@ -9523,7 +9523,7 @@ EditorNode::EditorNode() {
 
 	disk_changed = memnew(ConfirmationDialog);
 	{
-		disk_changed->set_title(TTR("Files have been modified outside Godot"));
+		disk_changed->set_title(TTR("Files have been modified outside Legend of the Game Engine"));
 
 		VBoxContainer *vbc = memnew(VBoxContainer);
 		disk_changed->add_child(vbc);

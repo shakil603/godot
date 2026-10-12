@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Godot</string>
 	<key>CFBundleName</key>
-	<string>Godot</string>
+	<string>Legend of the Game Engine</string>
 	<key>CFBundleIconFile</key>
 	<string>GodotLG.icns</string>
 	<key>CFBundleIconName</key>
@@ -93,7 +93,7 @@
 			<key>UTTypeReferenceURL</key>
 			<string></string>
 			<key>UTTypeDescription</key>
-			<string>Godot Engine scene</string>
+			<string>Legend of the Game Engine scene</string>
 			<key>UTTypeIconFile</key>
 			<string>Scene.icns</string>
 			<key>UTTypeConformsTo</key>
@@ -141,7 +141,7 @@
 			<key>UTTypeReferenceURL</key>
 			<string></string>
 			<key>UTTypeDescription</key>
-			<string>Godot Engine resource</string>
+			<string>Legend of the Game Engine resource</string>
 			<key>UTTypeIconFile</key>
 			<string>Resource.icns</string>
 			<key>UTTypeConformsTo</key>
@@ -165,7 +165,7 @@
 			<key>UTTypeReferenceURL</key>
 			<string></string>
 			<key>UTTypeDescription</key>
-			<string>Godot Engine shader</string>
+			<string>Legend of the Game Engine shader</string>
 			<key>UTTypeIconFile</key>
 			<string>Shader.icns</string>
 			<key>UTTypeConformsTo</key>
